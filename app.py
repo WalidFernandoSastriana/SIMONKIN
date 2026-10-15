@@ -76,7 +76,7 @@ BULAN = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
 
 DEFAULT_SETTINGS = {
     "nama_aplikasi": "SIMONKIN",
-    "nama_instansi": "Bagian Umum",
+    "nama_instansi": "Sistem Monitoring Kinerja Internal",
     "pengingat_rapat_menit": "60",
 }
 
