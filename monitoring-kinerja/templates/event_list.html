@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import delete_btn %}
+{% block title %}Event & Reminder{% endblock %}
+{% block heading %}{{ 'Event & Reminder' if is_admin else 'Pengingat & Event' }}{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <div class="tabs m0">
+    <a href="{{ url_for('event_list', tab='mendatang') }}" class="tab {{ 'active' if tab!='lewat' }}">Mendatang</a>
+    <a href="{{ url_for('event_list', tab='lewat') }}" class="tab {{ 'active' if tab=='lewat' }}">Sudah lewat</a>
+  </div>
+  {% if is_admin %}
+  <div class="actions">
+    <a href="{{ url_for('event_baru', jenis='reminder') }}" class="btn btn-light">{{ icon('bell',16) }} Reminder</a>
+    <a href="{{ url_for('event_baru') }}" class="btn btn-primary">{{ icon('plus',16) }} Event</a>
+  </div>
+  {% endif %}
+</div>
+<div class="card p0">
+{% for e in rows %}
+  <div class="ev-row" id="ev{{ e.id }}">
+    <div class="date-box {{ 'rem' if e.jenis=='reminder' else 'evt' }}"><b>{{ e.mulai[8:10] }}</b><span>{{ (e.mulai|tgl(false)).split(' ')[1][:3] }}</span></div>
+    <div class="li-body">
+      <div class="li-title">{{ e.judul }} <span class="badge {{ 'b-purple' if e.jenis=='reminder' else 'b-teal' }}">{{ e.jenis|capitalize }}</span></div>
+      <div class="li-meta">{{ icon('clock',13) }} {{ e.mulai|tgl }}{% if e.mulai[11:16] != '00:00' %}, {{ e.mulai|jam }}{% endif %}{% if e.selesai %} s.d. {{ e.selesai|tgljam }}{% endif %}
+        · {{ 'Untuk: ' ~ e.untuk_nama if e.untuk_nama else 'Untuk semua pegawai' }}
+        {% if e.ingatkan_menit %} · 🔔 diingatkan {{ e.ingatkan_menit // 1440 ~ ' hari' if e.ingatkan_menit >= 1440 else (e.ingatkan_menit // 60 ~ ' jam' if e.ingatkan_menit >= 60 else e.ingatkan_menit ~ ' menit') }} sebelumnya{% endif %}</div>
+      {% if e.deskripsi %}<div class="small">{{ e.deskripsi }}</div>{% endif %}
+    </div>
+    {% if is_admin %}
+    <div class="nowrap">
+      <a href="{{ url_for('event_edit', eid=e.id) }}" class="btn btn-sm btn-ghost">{{ icon('edit',15) }}</a>
+      {{ delete_btn(url_for('event_hapus', eid=e.id)) }}
+    </div>
+    {% endif %}
+  </div>
+{% else %}
+  <p class="empty">Tidak ada data.</p>
+{% endfor %}
+</div>
+{% endblock %}

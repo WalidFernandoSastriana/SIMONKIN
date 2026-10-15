@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, file_cell, delete_btn %}
+{% block title %}Detail Rapat{% endblock %}
+{% block heading %}Detail Rapat{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <a href="{{ url_for('rapat_list') if is_admin else url_for('tugas_saya') }}" class="btn btn-link">{{ icon('chev-l',16) }} Kembali</a>
+  {% if is_admin %}
+  <div class="actions">
+    <a href="{{ url_for('rapat_edit', rid=r.id) }}" class="btn btn-light">{{ icon('edit',16) }} Edit</a>
+    <form method="post" action="{{ url_for('rapat_hapus', rid=r.id) }}" class="inline" data-confirm="Hapus jadwal rapat ini beserta seluruh laporannya?">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}"><button class="btn btn-danger">{{ icon('trash',16) }} Hapus</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="detail-head">
+    <div>
+      <div class="muted small">{{ r.asal_undangan }}</div>
+      <h2>{{ r.perihal }}</h2>
+      <div class="li-meta">{{ icon('clock',14) }} {{ r.waktu|tgl }}, {{ r.waktu|jam }} WIB · {{ icon('pin',14) }} {{ r.tempat }}</div>
+    </div>
+    <span class="chip big">{{ r.waktu|relatif }}</span>
+  </div>
+  <dl class="dl">
+    <div><dt>No. Dispo Kabag</dt><dd>{{ r.no_dispo_kabag or '-' }}</dd></div>
+    <div><dt>No. Surat Undangan</dt><dd>{{ r.no_surat_undangan or '-' }}</dd></div>
+    <div><dt>Asal Undangan</dt><dd>{{ r.asal_undangan or '-' }}</dd></div>
+    <div><dt>Pimpinan Rapat</dt><dd>{{ r.pimpinan_rapat or '-' }}</dd></div>
+    <div><dt>Tempat</dt><dd>{{ r.tempat or '-' }}</dd></div>
+    <div><dt>Waktu Rapat</dt><dd>{{ r.waktu|tgl }} · {{ r.waktu|jam }} WIB</dd></div>
+    <div class="span-2"><dt>Keterangan</dt><dd>{{ r.keterangan or '-' }}</dd></div>
+  </dl>
+</div>
+
+<div class="card p0">
+  <div class="card-head pad"><h3>Disposisi &amp; Status Kinerja</h3></div>
+  <div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Pegawai</th><th>Status Kinerja</th><th>File Bukti</th><th>Catatan</th><th>Dilaporkan</th><th></th></tr></thead>
+    <tbody>
+    {% for d in r.dispo %}
+      <tr>
+        <td><div class="strong">{{ d.nama }}</div><div class="small muted">{{ d.jabatan or '' }}</div></td>
+        <td>{{ status_badge(d.status) }}</td>
+        <td>{{ file_cell(d) }}</td>
+        <td class="small">{{ d.catatan or '-' }}</td>
+        <td class="small nowrap">{{ d.dilaporkan_at|tgljam if d.dilaporkan_at else '-' }}</td>
+        <td class="nowrap"><a class="btn btn-sm {{ 'btn-primary' if not d.status else 'btn-light' }}" href="{{ url_for('lapor', did=d.id) }}">{{ icon('send',14) }} {{ 'Lapor' if not d.status else 'Ubah' }}</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

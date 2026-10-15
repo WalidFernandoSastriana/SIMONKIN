@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+{% block content %}
+<div class="welcome">
+  <div>
+    <h2>Selamat datang, {{ current_user.pegawai_nama or current_user.username }} 👋</h2>
+    <p class="muted">{{ now|tgl }}{% if is_admin %} · Ringkasan kegiatan bulan {{ bulan|bulan_nama }}{% endif %}</p>
+  </div>
+  {% if is_admin %}
+  <div class="actions">
+    <a href="{{ url_for('rapat_baru') }}" class="btn btn-primary">{{ icon('plus',16) }} Jadwal Rapat</a>
+    <a href="{{ url_for('event_baru') }}" class="btn btn-light">{{ icon('bell',16) }} Event / Reminder</a>
+  </div>
+  {% endif %}
+</div>
+
+{% if not is_admin and not current_user.pegawai_id %}
+<div class="alert alert-error">Akun Anda belum terhubung dengan data pegawai. Hubungi admin agar dapat menerima tugas.</div>
+{% endif %}
+
+<div class="stats">
+  {% if is_admin %}
+  <div class="stat"><div class="stat-ic c-blue">{{ icon('rapat') }}</div><div><div class="stat-num">{{ stats.rapat }}</div><div class="stat-lbl">Rapat bulan ini</div></div></div>
+  <div class="stat"><div class="stat-ic c-green">{{ icon('tugas') }}</div><div><div class="stat-num">{{ stats.ef }}</div><div class="stat-lbl">Disposisi Efektif</div></div></div>
+  <div class="stat"><div class="stat-ic c-red">{{ icon('clock') }}</div><div><div class="stat-num">{{ stats.tef }}</div><div class="stat-lbl">Tidak Efektif</div></div></div>
+  <div class="stat"><div class="stat-ic c-amber">{{ icon('bell') }}</div><div><div class="stat-num">{{ stats.belum }}</div><div class="stat-lbl">Belum lapor</div></div></div>
+  {% else %}
+  <div class="stat"><div class="stat-ic c-blue">{{ icon('rapat') }}</div><div><div class="stat-num">{{ stats.total }}</div><div class="stat-lbl">Total tugas</div></div></div>
+  <div class="stat"><div class="stat-ic c-amber">{{ icon('bell') }}</div><div><div class="stat-num">{{ stats.belum }}</div><div class="stat-lbl">Belum dilaporkan</div></div></div>
+  <div class="stat"><div class="stat-ic c-green">{{ icon('tugas') }}</div><div><div class="stat-num">{{ stats.ef }}</div><div class="stat-lbl">Efektif</div></div></div>
+  <div class="stat"><div class="stat-ic c-red">{{ icon('clock') }}</div><div><div class="stat-num">{{ stats.tef }}</div><div class="stat-lbl">Tidak Efektif</div></div></div>
+  {% endif %}
+</div>
+
+<div class="grid-2">
+  <section class="card">
+    <div class="card-head"><h3>{{ 'Rapat 7 hari ke depan' if is_admin else 'Rapat mendatang yang ditugaskan' }}</h3>
+      <a href="{{ url_for('kalender') }}" class="link">Lihat kalender</a></div>
+    {% for r in upcoming %}
+    <a class="list-item" href="{{ url_for('rapat_detail', rid=r.id) }}">
+      <div class="date-box"><b>{{ r.waktu[8:10] }}</b><span>{{ (r.waktu|tgl(false)).split(' ')[1][:3] }}</span></div>
+      <div class="li-body">
+        <div class="li-title">{{ r.perihal }}</div>
+        <div class="li-meta">{{ icon('clock',13) }} {{ r.waktu|jam }} · {{ icon('pin',13) }} {{ r.tempat }}</div>
+        {% if is_admin %}<div class="li-meta">Disposisi: {{ r.dispo|map(attribute='nama')|join(', ') }}</div>{% endif %}
+      </div>
+      <span class="chip">{{ r.waktu|relatif }}</span>
+    </a>
+    {% else %}<p class="empty">Tidak ada rapat terjadwal.</p>{% endfor %}
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h3>{{ 'Menunggu laporan kinerja' if is_admin else 'Perlu Anda laporkan' }}</h3>
+      {% if not is_admin %}<a href="{{ url_for('tugas_saya', tab='belum') }}" class="link">Semua</a>{% endif %}</div>
+    {% for p in perlu %}
+      {% if is_admin %}
+      <a class="list-item" href="{{ url_for('rapat_detail', rid=p.rapat_id) }}">
+        <div class="avatar sm">{{ p.nama[:1] }}</div>
+        <div class="li-body"><div class="li-title">{{ p.nama }}</div><div class="li-meta">{{ p.perihal }} · {{ p.waktu|tgljam }}</div></div>
+        {{ status_badge(None) }}
+      </a>
+      {% else %}
+      <div class="list-item">
+        <div class="date-box warn"><b>{{ p.waktu[8:10] }}</b><span>{{ (p.waktu|tgl(false)).split(' ')[1][:3] }}</span></div>
+        <div class="li-body"><div class="li-title">{{ p.perihal }}</div><div class="li-meta">{{ p.waktu|tgljam }} · {{ p.tempat }}</div></div>
+        <a href="{{ url_for('lapor', did=p.dispo_id) }}" class="btn btn-sm btn-primary">{{ icon('send',14) }} Lapor</a>
+      </div>
+      {% endif %}
+    {% else %}<p class="empty">✅ Semua laporan sudah lengkap.</p>{% endfor %}
+  </section>
+</div>
+
+<section class="card">
+  <div class="card-head"><h3>Event & pengingat mendatang</h3><a href="{{ url_for('event_list') }}" class="link">Semua</a></div>
+  <div class="event-grid">
+  {% for e in events %}
+    <div class="event-card {{ e.jenis }}">
+      <div class="ev-type">{{ 'Reminder' if e.jenis=='reminder' else 'Event' }}{% if e.untuk_nama %} · untuk {{ e.untuk_nama }}{% endif %}</div>
+      <div class="ev-title">{{ e.judul }}</div>
+      <div class="li-meta">{{ e.mulai|tgljam }}{% if e.selesai %} – {{ e.selesai|tgljam }}{% endif %}</div>
+      {% if e.deskripsi %}<div class="small muted">{{ e.deskripsi }}</div>{% endif %}
+    </div>
+  {% else %}<p class="empty">Belum ada event atau pengingat.</p>{% endfor %}
+  </div>
+</section>
+{% endblock %}

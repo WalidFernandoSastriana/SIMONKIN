@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Kalender{% endblock %}
+{% block heading %}Kalender{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <div class="cal-nav">
+    <a class="icon-btn" href="{{ url_for('kalender', y=prev[0], m=prev[1]) }}" title="Bulan sebelumnya">{{ icon('chev-l') }}</a>
+    <h2>{{ judul }}</h2>
+    <a class="icon-btn" href="{{ url_for('kalender', y=next[0], m=next[1]) }}" title="Bulan berikutnya">{{ icon('chev-r') }}</a>
+    <a class="btn btn-sm btn-light" href="{{ url_for('kalender') }}">Hari ini</a>
+  </div>
+  <div class="legend">
+    <span><i class="dot rapat"></i>Rapat{{ ' (belum lengkap)' if is_admin else ' (belum lapor)' }}</span>
+    <span><i class="dot rapat-done"></i>{{ 'Laporan lengkap' if is_admin else 'Efektif' }}</span>
+    {% if not is_admin %}<span><i class="dot rapat-no"></i>Tidak efektif</span>{% endif %}
+    <span><i class="dot event"></i>Event</span>
+    <span><i class="dot reminder"></i>Reminder</span>
+  </div>
+</div>
+<div class="card p0 cal">
+  <div class="cal-head">{% for h in ['Sen','Sel','Rab','Kam','Jum','Sab','Min'] %}<div>{{ h }}</div>{% endfor %}</div>
+  {% for week in weeks %}
+  <div class="cal-row">
+    {% for day in week %}
+      {% set key = day.isoformat() %}
+      <div class="cal-cell {{ 'other' if day.month != m }} {{ 'today' if day == today }} {{ 'weekend' if day.weekday() >= 5 }}">
+        <div class="cal-day">
+          <span>{{ day.day }}</span>
+          {% if is_admin %}<a href="{{ url_for('rapat_baru', tanggal=key) }}" class="cal-add" title="Tambah rapat pada tanggal ini">+</a>{% endif %}
+        </div>
+        {% for it in items.get(key, []) %}
+          <a href="{{ it.url }}" class="cal-item {{ it.cls }}" title="{{ it.judul }}{% if it.info %} — {{ it.info }}{% endif %}">
+            {% if it.jam %}<b>{{ it.jam }}</b> {% endif %}{{ it.judul }}</a>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

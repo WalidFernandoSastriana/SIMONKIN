@@ -1,0 +1,18 @@
+{% macro status_badge(status) -%}
+  {%- if status == 'EFEKTIF' -%}<span class="badge b-green">EFEKTIF</span>
+  {%- elif status == 'TIDAK EFEKTIF' -%}<span class="badge b-red">TIDAK EFEKTIF</span>
+  {%- else -%}<span class="badge b-amber">BELUM LAPOR</span>{%- endif -%}
+{%- endmacro %}
+
+{% macro file_cell(d) -%}
+  {%- if d.status == 'TIDAK EFEKTIF' -%}<span class="muted small">— (file kosong otomatis)</span>
+  {%- elif d.file_path -%}<a class="file-link" href="{{ url_for('berkas', did=d.id) }}" target="_blank">{{ icon('file',14) }} {{ d.file_name }}</a>
+  {%- else -%}<span class="muted small">-</span>{%- endif -%}
+{%- endmacro %}
+
+{% macro delete_btn(action, label='Hapus', msg='Yakin ingin menghapus data ini?') -%}
+<form method="post" action="{{ action }}" class="inline" data-confirm="{{ msg }}">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <button class="btn btn-sm btn-ghost-danger" title="{{ label }}">{{ icon('trash',15) }}</button>
+</form>
+{%- endmacro %}

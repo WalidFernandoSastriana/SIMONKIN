@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit' if p.id else 'Tambah' }} Pegawai{% endblock %}
+{% block heading %}{{ 'Edit' if p.id else 'Tambah' }} Data Pegawai{% endblock %}
+{% block content %}
+<form method="post" class="card form-card narrow">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <div class="form-grid">
+    <label class="field span-2"><span>Nama lengkap <b class="req">*</b></span><input name="nama" value="{{ p.nama or '' }}" required></label>
+    <label class="field"><span>NIP</span><input name="nip" value="{{ p.nip or '' }}" inputmode="numeric"></label>
+    <label class="field"><span>Jabatan</span><input name="jabatan" value="{{ p.jabatan or '' }}"></label>
+    <label class="field"><span>Unit / Bidang</span><input name="unit" value="{{ p.unit or '' }}"></label>
+    <label class="field"><span>No. HP</span><input name="no_hp" value="{{ p.no_hp or '' }}"></label>
+    <label class="field span-2"><span>Email</span><input type="email" name="email" value="{{ p.email or '' }}"></label>
+  </div>
+  <label class="check"><input type="checkbox" name="aktif" value="1" {{ 'checked' if p.aktif }}> Pegawai aktif <span class="muted small">(pegawai nonaktif tidak muncul di pilihan disposisi)</span></label>
+  {% if not p.id %}<label class="check"><input type="checkbox" name="buat_akun" value="1" checked> Lanjut buatkan akun login untuk pegawai ini</label>{% endif %}
+  <div class="form-actions"><a href="{{ url_for('pegawai_list') }}" class="btn btn-light">Batal</a><button class="btn btn-primary">Simpan</button></div>
+</form>
+{% endblock %}

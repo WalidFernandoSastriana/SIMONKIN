@@ -1,0 +1,10 @@
+{% extends 'base.html' if current_user else 'error_plain.html' %}
+{% block title %}Error {{ code }}{% endblock %}
+{% block heading %}Terjadi kendala{% endblock %}
+{% block content %}
+<div class="card empty-state">
+  <div class="err-code">{{ code }}</div>
+  <p>{{ pesan }}</p>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Kembali ke Dashboard</a>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit' if u.id else 'Tambah' }} Akun{% endblock %}
+{% block heading %}{{ 'Edit' if u.id else 'Tambah' }} Akun Pengguna{% endblock %}
+{% block content %}
+<form method="post" class="card form-card narrow">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <label class="field"><span>Username <b class="req">*</b></span><input name="username" value="{{ u.username or '' }}" required autocomplete="off"></label>
+  <label class="field"><span>{{ 'Password baru (kosongkan jika tidak diubah)' if u.id else 'Password' }} {% if not u.id %}<b class="req">*</b>{% endif %}</span>
+    <input type="password" name="password" minlength="6" {{ '' if u.id else 'required' }} autocomplete="new-password"></label>
+  <div class="field"><span>Peran / Hak akses</span>
+    <div class="seg">
+      <label><input type="radio" name="role" value="user" {{ 'checked' if u.role!='admin' }}><span>User</span></label>
+      <label><input type="radio" name="role" value="admin" {{ 'checked' if u.role=='admin' }}><span>Admin</span></label>
+    </div>
+  </div>
+  <label class="field"><span>Hubungkan ke data pegawai <em class="muted">(wajib untuk User)</em></span>
+    <select name="pegawai_id">
+      <option value="">— Tidak dihubungkan —</option>
+      {% for p in pegawai %}<option value="{{ p.id }}" {{ 'selected' if u.pegawai_id == p.id }}>{{ p.nama }}{% if p.jabatan %} — {{ p.jabatan }}{% endif %}</option>{% endfor %}
+    </select>
+    <small class="muted">Hanya pegawai aktif yang belum punya akun yang ditampilkan.</small></label>
+  <label class="check"><input type="checkbox" name="aktif" value="1" {{ 'checked' if u.aktif }}> Akun aktif (dapat login)</label>
+  <div class="form-actions"><a href="{{ url_for('pengguna_list') }}" class="btn btn-light">Batal</a><button class="btn btn-primary">Simpan</button></div>
+</form>
+{% endblock %}

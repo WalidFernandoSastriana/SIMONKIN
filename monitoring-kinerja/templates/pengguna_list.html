@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import delete_btn %}
+{% block title %}Akses Pengguna{% endblock %}
+{% block heading %}Akses Pengguna{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <p class="muted m0">Kelola akun login. <b>Admin</b> = akses penuh pengaturan sistem. <b>User</b> = hanya melihat & melaporkan tugas miliknya.</p>
+  <a href="{{ url_for('pengguna_baru') }}" class="btn btn-primary">{{ icon('plus',16) }} Tambah Akun</a>
+</div>
+<div class="role-info">
+  <div class="card role-card"><span class="badge b-blue">ADMIN</span>
+    <ul><li>Kelola jadwal rapat & disposisi</li><li>Kelola data pegawai & akun</li><li>Kelola event, reminder & pengaturan</li><li>Rekap kinerja & ekspor Excel</li></ul></div>
+  <div class="card role-card"><span class="badge b-gray">USER</span>
+    <ul><li>Melihat tugas (disposisi) miliknya</li><li>Melapor status kinerja + file bukti + catatan</li><li>Melihat kalender & pengingat</li><li>Tidak bisa menambah / mengubah data sistem</li></ul></div>
+</div>
+<div class="card p0"><div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Username</th><th>Peran</th><th>Terhubung ke Pegawai</th><th>Login terakhir</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for u in rows %}
+  <tr class="{{ 'row-past' if not u.aktif }}">
+    <td class="strong">@{{ u.username }}{% if u.id == current_user.id %} <span class="muted small">(Anda)</span>{% endif %}</td>
+    <td>{% if u.role=='admin' %}<span class="badge b-blue">ADMIN</span>{% else %}<span class="badge b-gray">USER</span>{% endif %}</td>
+    <td>{{ u.pegawai_nama or '-' }}{% if u.jabatan %}<div class="small muted">{{ u.jabatan }}</div>{% endif %}</td>
+    <td class="small">{{ u.last_login|tgljam if u.last_login else 'Belum pernah' }}</td>
+    <td>{% if u.aktif %}<span class="badge b-green">Aktif</span>{% else %}<span class="badge b-gray">Nonaktif</span>{% endif %}</td>
+    <td class="nowrap">
+      <a href="{{ url_for('pengguna_edit', uid=u.id) }}" class="btn btn-sm btn-ghost" title="Edit / reset password">{{ icon('edit',15) }}</a>
+      {% if u.id != current_user.id %}{{ delete_btn(url_for('pengguna_hapus', uid=u.id), msg='Hapus akun @' ~ u.username ~ '?') }}{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div></div>
+{% endblock %}

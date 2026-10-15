@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Rekap Kinerja{% endblock %}
+{% block heading %}Rekap Kinerja Pegawai{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <form class="filters" method="get">
+    <input type="month" name="bulan" value="{{ bulan }}">
+    <button class="btn btn-light">Tampilkan</button>
+    <a class="btn btn-link" href="{{ url_for('rekap', bulan='') }}">Semua periode</a>
+  </form>
+  <a href="{{ url_for('rekap_export', bulan=bulan) }}" class="btn btn-light">{{ icon('download',16) }} Ekspor Excel</a>
+</div>
+<p class="muted">Periode: <b>{{ bulan|bulan_nama if bulan else 'Semua periode' }}</b></p>
+<div class="stats">
+  <div class="stat"><div class="stat-ic c-blue">{{ icon('rapat') }}</div><div><div class="stat-num">{{ tot.total }}</div><div class="stat-lbl">Total disposisi</div></div></div>
+  <div class="stat"><div class="stat-ic c-green">{{ icon('tugas') }}</div><div><div class="stat-num">{{ tot.ef }}</div><div class="stat-lbl">Efektif</div></div></div>
+  <div class="stat"><div class="stat-ic c-red">{{ icon('clock') }}</div><div><div class="stat-num">{{ tot.tef }}</div><div class="stat-lbl">Tidak efektif</div></div></div>
+  <div class="stat"><div class="stat-ic c-amber">{{ icon('chart') }}</div><div><div class="stat-num">{{ tot.persen }}%</div><div class="stat-lbl">Tingkat efektif</div></div></div>
+</div>
+<div class="card p0"><div class="table-wrap">
+<table class="table">
+  <thead><tr><th>No</th><th>Pegawai</th><th>Unit</th><th class="c">Total Tugas</th><th class="c">Efektif</th><th class="c">Tidak Efektif</th><th class="c">Belum Lapor</th><th style="min-width:180px">% Efektif</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+  <tr>
+    <td>{{ loop.index }}</td>
+    <td><div class="strong">{{ r.nama }}</div><div class="small muted">{{ r.jabatan or '' }}{% if r.nip %} · {{ r.nip }}{% endif %}</div></td>
+    <td>{{ r.unit or '-' }}</td>
+    <td class="c strong">{{ r.total }}</td>
+    <td class="c"><span class="badge b-green">{{ r.ef }}</span></td>
+    <td class="c"><span class="badge b-red">{{ r.tef }}</span></td>
+    <td class="c"><span class="badge b-amber">{{ r.belum }}</span></td>
+    <td><div class="bar"><div class="bar-fill {{ 'lo' if r.persen < 50 else ('mid' if r.persen < 80 else '') }}" style="width: {{ r.persen }}%"></div></div><span class="small">{{ r.persen }}%</span></td>
+  </tr>
+  {% else %}<tr><td colspan="8" class="empty">Belum ada data.</td></tr>{% endfor %}
+  </tbody>
+</table></div></div>
+<p class="small muted">% Efektif = jumlah tugas berstatus EFEKTIF ÷ total tugas yang didisposisikan pada periode tersebut.</p>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit' if r.id else 'Tambah' }} Jadwal Rapat{% endblock %}
+{% block heading %}{{ 'Edit' if r.id else 'Tambah' }} Jadwal Rapat{% endblock %}
+{% block content %}
+<form method="post" class="card form-card">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <div class="form-section">Informasi Surat</div>
+  <div class="form-grid">
+    <label class="field"><span>No. Dispo Kabag <b class="req">*</b></span><input name="no_dispo_kabag" value="{{ r.no_dispo_kabag or '' }}" required></label>
+    <label class="field"><span>No. Surat Undangan <b class="req">*</b></span><input name="no_surat_undangan" value="{{ r.no_surat_undangan or '' }}" required></label>
+    <label class="field span-2"><span>Asal Undangan <b class="req">*</b></span><input name="asal_undangan" value="{{ r.asal_undangan or '' }}" required></label>
+  </div>
+  <div class="form-section">Detail Rapat</div>
+  <div class="form-grid">
+    <label class="field span-2"><span>Perihal (Agenda Rapat) <b class="req">*</b></span><textarea name="perihal" rows="2" required>{{ r.perihal or '' }}</textarea></label>
+    <label class="field"><span>Pimpinan Rapat <b class="req">*</b></span><input name="pimpinan_rapat" value="{{ r.pimpinan_rapat or '' }}" required></label>
+    <label class="field"><span>Tempat <b class="req">*</b></span><input name="tempat" value="{{ r.tempat or '' }}" required></label>
+    <label class="field"><span>Tanggal Rapat <b class="req">*</b></span><input type="date" name="tanggal" value="{{ tanggal or '' }}" required></label>
+    <label class="field"><span>Jam Rapat <b class="req">*</b></span><input type="time" name="jam" value="{{ jam or '' }}" required></label>
+  </div>
+
+  <div class="form-section">Disposisi <span class="muted small">(pegawai yang ditugaskan) <b class="req">*</b></span></div>
+  <div class="dispo-picker">
+    <div class="dp-tools">
+      <input type="search" id="dpSearch" placeholder="Cari nama / jabatan pegawai…">
+      <span class="muted small" id="dpCount"></span>
+    </div>
+    <div class="dp-list" id="dpList">
+      {% for p in pegawai %}
+      <label class="dp-item" data-text="{{ (p.nama ~ ' ' ~ (p.jabatan or '') ~ ' ' ~ (p.unit or ''))|lower }}">
+        <input type="checkbox" name="disposisi" value="{{ p.id }}" {{ 'checked' if p.id in selected }}>
+        <div><div class="strong">{{ p.nama }}</div><div class="small muted">{{ p.jabatan or '-' }}{% if p.unit %} · {{ p.unit }}{% endif %}</div></div>
+        {% if reported and p.id in reported %}<span class="badge b-blue" title="Sudah melapor">sudah lapor</span>{% endif %}
+      </label>
+      {% else %}
+      <p class="empty">Belum ada data pegawai. <a href="{{ url_for('pegawai_baru') }}">Tambah pegawai</a> terlebih dahulu.</p>
+      {% endfor %}
+    </div>
+    {% if r.id %}<p class="small muted">⚠️ Menghapus centang pegawai yang sudah melapor akan menghapus laporan &amp; file bukti miliknya.</p>{% endif %}
+  </div>
+
+  <div class="form-section">Lainnya</div>
+  <label class="field"><span>Keterangan <em class="muted">(opsional)</em></span><textarea name="keterangan" rows="2">{{ r.keterangan or '' }}</textarea></label>
+  <p class="small muted">Status kinerja (Efektif / Tidak Efektif), file bukti, dan catatan diisi oleh pegawai yang didisposisi melalui menu <b>Tugas Saya</b>.</p>
+
+  <div class="form-actions">
+    <a href="{{ url_for('rapat_detail', rid=r.id) if r.id else url_for('rapat_list') }}" class="btn btn-light">Batal</a>
+    <button class="btn btn-primary">Simpan Jadwal</button>
+  </div>
+</form>
+{% endblock %}

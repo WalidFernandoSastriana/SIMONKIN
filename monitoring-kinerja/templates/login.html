@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Masuk · {{ settings.nama_aplikasi }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">
+  <div class="login-wrap">
+    <div class="login-side">
+      <div class="logo big">{{ icon('chart', 30) }}</div>
+      <h1>{{ settings.nama_aplikasi }}</h1>
+      <p>{{ settings.nama_instansi }}</p>
+      <ul class="login-points">
+        <li>{{ icon('rapat',16) }} Jadwal rapat & disposisi pegawai</li>
+        <li>{{ icon('tugas',16) }} Laporan status kinerja dengan bukti</li>
+        <li>{{ icon('kalender',16) }} Kalender, event & pengingat</li>
+      </ul>
+    </div>
+    <form method="post" class="login-card">
+      <h2>Masuk</h2>
+      <p class="muted">Gunakan akun yang diberikan oleh admin.</p>
+      {% with msgs = get_flashed_messages(with_categories=true) %}
+        {% for cat, m in msgs %}<div class="alert alert-{{ cat }}">{{ m }}</div>{% endfor %}
+      {% endwith %}
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <label class="field"><span>Username</span><input name="username" required autofocus autocomplete="username"></label>
+      <label class="field"><span>Password</span><input name="password" type="password" required autocomplete="current-password"></label>
+      <button class="btn btn-primary w100">Masuk</button>
+    </form>
+  </div>
+</body>
+</html>

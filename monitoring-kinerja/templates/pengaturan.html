@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Pengaturan{% endblock %}
+{% block heading %}Pengaturan Sistem{% endblock %}
+{% block content %}
+<div class="grid-2">
+  <form method="post" class="card form-card">
+    <h3>Umum</h3>
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <label class="field"><span>Nama aplikasi</span><input name="nama_aplikasi" value="{{ settings.nama_aplikasi }}" required></label>
+    <label class="field"><span>Nama instansi / bagian</span><input name="nama_instansi" value="{{ settings.nama_instansi }}" required></label>
+    <label class="field"><span>Pengingat rapat otomatis (menit sebelum rapat)</span>
+      <input type="number" min="0" name="pengingat_rapat_menit" value="{{ settings.pengingat_rapat_menit }}">
+      <small class="muted">Pegawai yang didisposisi akan menerima notifikasi di browser. Isi 0 untuk mematikan.</small></label>
+    <div class="form-actions"><button class="btn btn-primary">Simpan Pengaturan</button></div>
+  </form>
+  <div class="card">
+    <h3>Informasi Sistem</h3>
+    <dl class="dl one">
+      <div><dt>Jumlah pegawai</dt><dd>{{ info.pegawai }}</dd></div>
+      <div><dt>Akun pengguna</dt><dd>{{ info.users }}</dd></div>
+      <div><dt>Jadwal rapat</dt><dd>{{ info.rapat }}</dd></div>
+      <div><dt>Event &amp; reminder</dt><dd>{{ info.events }}</dd></div>
+      <div><dt>File bukti tersimpan</dt><dd>{{ info.files }}</dd></div>
+    </dl>
+    <h3 class="mt16">Cadangan Data</h3>
+    <p class="small muted">Unduh salinan database secara berkala. File bukti tersimpan di folder <code>data/uploads</code>.</p>
+    <a href="{{ url_for('backup_db') }}" class="btn btn-light">{{ icon('download',16) }} Unduh Backup Database</a>
+  </div>
+</div>
+{% endblock %}

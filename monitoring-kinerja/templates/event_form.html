@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit' if e.id else 'Tambah' }} Event / Reminder{% endblock %}
+{% block heading %}{{ 'Edit' if e.id else 'Tambah' }} Event / Reminder{% endblock %}
+{% block content %}
+<form method="post" class="card form-card narrow">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <div class="field"><span>Jenis</span>
+    <div class="seg">
+      <label><input type="radio" name="jenis" value="event" {{ 'checked' if e.jenis!='reminder' }}><span>Event</span></label>
+      <label><input type="radio" name="jenis" value="reminder" {{ 'checked' if e.jenis=='reminder' }}><span>Reminder</span></label>
+    </div>
+  </div>
+  <label class="field"><span>Judul <b class="req">*</b></span><input name="judul" value="{{ e.judul or '' }}" required></label>
+  <div class="form-grid">
+    <label class="field"><span>Tanggal mulai <b class="req">*</b></span><input type="date" name="tanggal" value="{{ tanggal }}" required></label>
+    <label class="field"><span>Jam mulai</span><input type="time" name="jam" value="{{ jam }}"></label>
+    <label class="field"><span>Tanggal selesai <em class="muted">(opsional)</em></span><input type="date" name="tanggal_selesai" value="{{ tanggal_selesai }}"></label>
+    <label class="field"><span>Jam selesai</span><input type="time" name="jam_selesai" value="{{ jam_selesai }}"></label>
+  </div>
+  <div class="form-grid">
+    <label class="field"><span>Ingatkan</span>
+      <select name="ingatkan_menit">
+        {% for v, l in [(0,'Tanpa pengingat'),(15,'15 menit sebelum'),(30,'30 menit sebelum'),(60,'1 jam sebelum'),(120,'2 jam sebelum'),(1440,'1 hari sebelum'),(4320,'3 hari sebelum')] %}
+        <option value="{{ v }}" {{ 'selected' if (e.ingatkan_menit or 0)|int == v }}>{{ l }}</option>{% endfor %}
+      </select></label>
+    <label class="field"><span>Ditujukan untuk</span>
+      <select name="untuk_pegawai_id">
+        <option value="">Semua pegawai</option>
+        {% for p in pegawai %}<option value="{{ p.id }}" {{ 'selected' if e.untuk_pegawai_id == p.id }}>{{ p.nama }}</option>{% endfor %}
+      </select></label>
+  </div>
+  <label class="field"><span>Deskripsi</span><textarea name="deskripsi" rows="3">{{ e.deskripsi or '' }}</textarea></label>
+  <div class="form-actions"><a href="{{ url_for('event_list') }}" class="btn btn-light">Batal</a><button class="btn btn-primary">Simpan</button></div>
+</form>
+{% endblock %}

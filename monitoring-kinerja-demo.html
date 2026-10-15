@@ -1,0 +1,4703 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SIMONKIN — Demo</title>
+    <style>
+      :root {
+        --bg: #f3f5f9;
+        --card: #fff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --primary: #1e40af;
+        --primary-2: #2563eb;
+        --primary-soft: #e0e7ff;
+        --side: #0f1e46;
+        --side-2: #18295c;
+        --green: #059669;
+        --green-soft: #d1fae5;
+        --red: #dc2626;
+        --red-soft: #fee2e2;
+        --amber: #b45309;
+        --amber-soft: #fef3c7;
+        --purple: #7c3aed;
+        --purple-soft: #ede9fe;
+        --teal: #0d9488;
+        --teal-soft: #ccfbf1;
+        --radius: 12px;
+        --shadow:
+          0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          Roboto,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 14.5px;
+        line-height: 1.5;
+      }
+      a {
+        color: var(--primary-2);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.3;
+      }
+      h2 {
+        font-size: 1.25rem;
+      }
+      h3 {
+        font-size: 1.02rem;
+      }
+      code {
+        background: #eef2f7;
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+      .ic {
+        flex-shrink: 0;
+        vertical-align: -3px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .small {
+        font-size: 12.5px;
+      }
+      .strong {
+        font-weight: 600;
+      }
+      .nowrap {
+        white-space: nowrap;
+      }
+      .c {
+        text-align: center;
+      }
+      .w100 {
+        width: 100%;
+      }
+      .m0 {
+        margin: 0 !important;
+      }
+      .mt4 {
+        margin-top: 4px;
+      }
+      .mt16 {
+        margin-top: 18px;
+      }
+      .inline {
+        display: inline;
+      }
+      [hidden] {
+        display: none !important;
+      }
+
+      /* layout */
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 252px;
+        background: linear-gradient(180deg, var(--side), var(--side-2));
+        color: #cbd5e1;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 40;
+        transition: transform 0.2s;
+      }
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 20px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #3b82f6, #06b6d4);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+      }
+      .logo.big {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        margin-bottom: 16px;
+      }
+      .brand-title {
+        color: #fff;
+        font-weight: 700;
+        font-size: 15px;
+      }
+      .brand-sub {
+        font-size: 12px;
+        color: #94a3b8;
+      }
+      .nav {
+        padding: 12px 10px;
+        flex: 1;
+        overflow: auto;
+      }
+      .nav a {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 9px 12px;
+        border-radius: 9px;
+        color: #cbd5e1;
+        margin-bottom: 2px;
+        font-weight: 500;
+      }
+      .nav a:hover {
+        background: rgba(255, 255, 255, 0.07);
+        text-decoration: none;
+        color: #fff;
+      }
+      .nav a.active {
+        background: #2563eb;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+      }
+      .nav-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #64748b;
+        padding: 14px 12px 6px;
+      }
+      .nav-badge {
+        margin-left: auto;
+        background: #f59e0b;
+        color: #111;
+        font-size: 11px;
+        font-weight: 700;
+        border-radius: 20px;
+        padding: 0 7px;
+      }
+      .sidebar-foot {
+        padding: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .main {
+        flex: 1;
+        margin-left: 252px;
+        min-width: 0;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(6px);
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 26px;
+      }
+      .page-title {
+        font-size: 1.15rem;
+        flex: 1;
+      }
+      .user-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .user-name {
+        font-weight: 600;
+        font-size: 13.5px;
+      }
+      .user-role {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--primary-soft);
+        color: var(--primary);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .avatar.sm {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+      }
+      .icon-btn {
+        border: 0;
+        background: transparent;
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        display: inline-grid;
+        place-items: center;
+        color: #475569;
+        cursor: pointer;
+      }
+      .icon-btn:hover {
+        background: #eef2f7;
+        color: var(--primary);
+      }
+      .menu-btn {
+        display: none;
+      }
+      .content {
+        padding: 24px 26px 40px;
+        max-width: 1500px;
+      }
+      .backdrop {
+        display: none;
+      }
+
+      /* cards */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 20px;
+        margin-bottom: 18px;
+      }
+      .card.p0 {
+        padding: 0;
+        overflow: hidden;
+      }
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        gap: 10px;
+      }
+      .card-head.pad {
+        padding: 16px 20px 0;
+      }
+      .link {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .grid-2 > .card {
+        margin-bottom: 0;
+      }
+      .grid-2 {
+        margin-bottom: 18px;
+      }
+
+      /* buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        padding: 8px 15px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none !important;
+        line-height: 1.3;
+        white-space: nowrap;
+        justify-content: center;
+      }
+      .btn-primary {
+        background: var(--primary-2);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--primary);
+      }
+      .btn-light {
+        background: #fff;
+        border-color: #d1d5db;
+        color: #374151;
+      }
+      .btn-light:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+      }
+      .btn-danger {
+        background: var(--red);
+        color: #fff;
+      }
+      .btn-link {
+        background: transparent;
+        color: var(--primary-2);
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: #475569;
+      }
+      .btn-ghost:hover {
+        background: #eef2f7;
+        color: var(--primary);
+      }
+      .btn-ghost-danger {
+        background: transparent;
+        color: #94a3b8;
+        border: 0;
+      }
+      .btn-ghost-danger:hover {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+      .btn-outline-light {
+        background: transparent;
+        color: #cbd5e1;
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+      .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+      .btn-sm {
+        padding: 5px 10px;
+        font-size: 13px;
+        border-radius: 7px;
+      }
+
+      /* badges & chips */
+      .badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        border-radius: 6px;
+        padding: 2px 8px;
+        white-space: nowrap;
+      }
+      .b-green {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+      .b-red {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+      .b-amber {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+      .b-blue {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+      .b-gray {
+        background: #f1f5f9;
+        color: #475569;
+      }
+      .b-purple {
+        background: var(--purple-soft);
+        color: var(--purple);
+      }
+      .b-teal {
+        background: var(--teal-soft);
+        color: var(--teal);
+      }
+      .chip {
+        display: inline-block;
+        background: #f1f5f9;
+        color: #475569;
+        border-radius: 20px;
+        padding: 2px 10px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .chip.big {
+        font-size: 13px;
+        padding: 5px 12px;
+      }
+
+      /* alerts */
+      .alert {
+        padding: 11px 15px;
+        border-radius: 10px;
+        margin-bottom: 14px;
+        border: 1px solid;
+        font-weight: 500;
+      }
+      .alert-success {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #065f46;
+      }
+      .alert-error {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #991b1b;
+      }
+      .alert-info {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1e3a8a;
+      }
+
+      /* dashboard */
+      .welcome {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+      .stat {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        box-shadow: var(--shadow);
+      }
+      .stat-ic {
+        width: 44px;
+        height: 44px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+      }
+      .c-blue {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+      .c-green {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+      .c-red {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+      .c-amber {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+      .stat-num {
+        font-size: 1.6rem;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+      .stat-lbl {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .list-item {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 11px 8px;
+        border-radius: 10px;
+        color: inherit;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .list-item:last-child {
+        border-bottom: 0;
+      }
+      a.list-item:hover {
+        background: #f8fafc;
+        text-decoration: none;
+      }
+      .li-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .li-title {
+        font-weight: 600;
+      }
+      .li-meta {
+        color: var(--muted);
+        font-size: 12.5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .date-box {
+        width: 48px;
+        min-width: 48px;
+        height: 50px;
+        border-radius: 10px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        line-height: 1.05;
+      }
+      .date-box b {
+        font-size: 18px;
+      }
+      .date-box span {
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+      .date-box.warn {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+      .date-box.rem {
+        background: var(--purple-soft);
+        color: var(--purple);
+      }
+      .date-box.evt {
+        background: var(--teal-soft);
+        color: var(--teal);
+      }
+      .empty {
+        color: var(--muted);
+        text-align: center;
+        padding: 22px;
+      }
+      .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 12px;
+      }
+      .event-card {
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--teal);
+        border-radius: 10px;
+        padding: 12px 14px;
+      }
+      .event-card.reminder {
+        border-left-color: var(--purple);
+      }
+      .ev-type {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .ev-title {
+        font-weight: 600;
+        margin: 2px 0;
+      }
+
+      /* toolbar, filters, table */
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .filters input[type="search"] {
+        min-width: 280px;
+      }
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: inherit;
+        border: 1px solid #d1d5db;
+        border-radius: 9px;
+        padding: 8px 11px;
+        background: #fff;
+        width: 100%;
+      }
+      .filters input,
+      .filters select {
+        width: auto;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary-2);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+      textarea {
+        resize: vertical;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+      .table th {
+        background: #f8fafc;
+        text-align: left;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #475569;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .table td {
+        padding: 11px 12px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: top;
+      }
+      .table tr:hover td {
+        background: #fafbff;
+      }
+      .table td a {
+        color: inherit;
+      }
+      .table td.strong a:hover {
+        color: var(--primary-2);
+      }
+      .row-past td {
+        background: #fbfbfc;
+        color: #64748b;
+      }
+      .dispo-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: center;
+        padding: 2px 0;
+        white-space: nowrap;
+      }
+      .actions-cell form {
+        display: inline;
+      }
+      .file-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--primary-2) !important;
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      /* forms */
+      .form-card {
+        max-width: 880px;
+      }
+      .form-card.narrow {
+        max-width: 620px;
+      }
+      .form-card h3 {
+        margin-bottom: 14px;
+      }
+      .form-section {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 20px 0 10px;
+        padding-bottom: 6px;
+        border-bottom: 1px dashed var(--line);
+      }
+      .form-section:first-of-type {
+        margin-top: 0;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 16px;
+      }
+      .span-2 {
+        grid-column: span 2;
+      }
+      .field {
+        display: block;
+        margin-bottom: 14px;
+      }
+      .field > span {
+        display: block;
+        font-weight: 600;
+        font-size: 13px;
+        margin-bottom: 5px;
+      }
+      .req {
+        color: var(--red);
+      }
+      .check {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+      .check input {
+        width: auto;
+      }
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .seg {
+        display: inline-flex;
+        background: #f1f5f9;
+        border-radius: 10px;
+        padding: 3px;
+      }
+      .seg label {
+        cursor: pointer;
+      }
+      .seg input {
+        display: none;
+      }
+      .seg span {
+        display: block;
+        padding: 6px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #475569;
+      }
+      .seg input:checked + span {
+        background: #fff;
+        color: var(--primary);
+        box-shadow: var(--shadow);
+      }
+
+      /* disposisi picker */
+      .dispo-picker {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px;
+        background: #fafbfc;
+        margin-bottom: 12px;
+      }
+      .dp-tools {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .dp-tools input {
+        max-width: 340px;
+      }
+      .dp-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 8px;
+        max-height: 330px;
+        overflow: auto;
+      }
+      .dp-item {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 9px 11px;
+        cursor: pointer;
+      }
+      .dp-item input {
+        width: auto;
+        accent-color: var(--primary-2);
+        transform: scale(1.15);
+      }
+      .dp-item > div {
+        flex: 1;
+        min-width: 0;
+      }
+      .dp-item:has(input:checked) {
+        border-color: var(--primary-2);
+        background: #eff6ff;
+      }
+
+      /* detail */
+      .detail-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 16px;
+      }
+      .detail-head h2 {
+        margin: 2px 0 6px;
+      }
+      .dl {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px 20px;
+        margin: 0;
+      }
+      .dl.one {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      .dl dt {
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .dl dd {
+        margin: 2px 0 0;
+        font-weight: 500;
+      }
+      .dl .span-2 {
+        grid-column: span 3;
+      }
+
+      /* tugas */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .tab {
+        padding: 9px 16px;
+        color: #475569;
+        font-weight: 600;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+      }
+      .tab:hover {
+        text-decoration: none;
+        color: var(--primary);
+      }
+      .tab.active {
+        color: var(--primary-2);
+        border-bottom-color: var(--primary-2);
+      }
+      .task {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        border-left: 4px solid #f59e0b;
+      }
+      .task-ef {
+        border-left-color: var(--green);
+      }
+      .task-tef {
+        border-left-color: var(--red);
+      }
+      .task-main {
+        flex: 1;
+        min-width: 0;
+      }
+      .task-top {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+      .task h3 {
+        margin-bottom: 4px;
+      }
+      .task h3 a {
+        color: inherit;
+      }
+      .task-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 18px;
+        font-size: 13px;
+        margin: 8px 0 4px;
+        color: #374151;
+      }
+      .task-report {
+        background: #f8fafc;
+        border-radius: 9px;
+        padding: 10px 12px;
+        margin-top: 10px;
+        font-size: 13px;
+        display: grid;
+        gap: 3px;
+      }
+
+      /* lapor */
+      .lapor-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+        margin-top: 6px;
+      }
+      .status-choice {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .sc {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        border: 2px solid var(--line);
+        border-radius: 11px;
+        padding: 12px 14px;
+        cursor: pointer;
+      }
+      .sc input {
+        width: auto;
+        transform: scale(1.2);
+      }
+      .sc small {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .sc-ef:has(input:checked) {
+        border-color: var(--green);
+        background: #f0fdf4;
+      }
+      .sc-ef b {
+        color: var(--green);
+      }
+      .sc-tef:has(input:checked) {
+        border-color: var(--red);
+        background: #fef2f2;
+      }
+      .sc-tef b {
+        color: var(--red);
+      }
+      .dropzone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        color: #475569;
+        background: #fafbfc;
+      }
+      .dropzone:hover,
+      .dropzone.drag {
+        border-color: var(--primary-2);
+        background: #eff6ff;
+      }
+      .dropzone input {
+        display: none;
+      }
+      .dropzone.has-file {
+        border-style: solid;
+        border-color: var(--green);
+        background: #f0fdf4;
+      }
+      .current-file {
+        font-size: 13px;
+        margin-bottom: 8px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .file-empty {
+        border: 2px dashed #fecaca;
+        background: #fef2f2;
+        color: #991b1b;
+        text-align: center;
+        padding: 18px;
+        border-radius: 12px;
+        font-weight: 600;
+      }
+
+      /* kalender */
+      .cal-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .cal-nav h2 {
+        min-width: 170px;
+        text-align: center;
+      }
+      .legend {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        font-size: 12.5px;
+        color: #475569;
+      }
+      .dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        margin-right: 5px;
+        vertical-align: -1px;
+      }
+      .dot.rapat,
+      .cal-item.rapat {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .dot.rapat {
+        background: #3b82f6;
+      }
+      .dot.rapat-done {
+        background: var(--green);
+      }
+      .cal-item.rapat-done {
+        background: var(--green-soft);
+        color: #065f46;
+      }
+      .dot.rapat-no {
+        background: var(--red);
+      }
+      .cal-item.rapat-no {
+        background: var(--red-soft);
+        color: #991b1b;
+      }
+      .dot.event {
+        background: var(--teal);
+      }
+      .cal-item.event {
+        background: var(--teal-soft);
+        color: #115e59;
+      }
+      .dot.reminder {
+        background: var(--purple);
+      }
+      .cal-item.reminder {
+        background: var(--purple-soft);
+        color: #5b21b6;
+      }
+      .cal-head,
+      .cal-row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+      }
+      .cal-head div {
+        padding: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #475569;
+        background: #f8fafc;
+        border-bottom: 1px solid var(--line);
+        text-align: center;
+      }
+      .cal-cell {
+        min-height: 118px;
+        border-right: 1px solid #f1f5f9;
+        border-bottom: 1px solid #f1f5f9;
+        padding: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        min-width: 0;
+      }
+      .cal-cell:nth-child(7n) {
+        border-right: 0;
+      }
+      .cal-cell.weekend {
+        background: #fcfcfd;
+      }
+      .cal-cell.other {
+        background: #f8fafc;
+      }
+      .cal-cell.other .cal-day span {
+        color: #cbd5e1;
+      }
+      .cal-day {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 13px;
+        margin-bottom: 2px;
+      }
+      .cal-cell.today .cal-day span {
+        background: var(--primary-2);
+        color: #fff;
+        border-radius: 50%;
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+      }
+      .cal-add {
+        opacity: 0;
+        color: var(--primary-2);
+        font-weight: 700;
+        width: 22px;
+        height: 22px;
+        display: grid;
+        place-items: center;
+        border-radius: 6px;
+      }
+      .cal-cell:hover .cal-add {
+        opacity: 1;
+      }
+      .cal-add:hover {
+        background: var(--primary-soft);
+        text-decoration: none;
+      }
+      .cal-item {
+        display: block;
+        font-size: 11.5px;
+        border-radius: 5px;
+        padding: 2px 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .cal-item:hover {
+        text-decoration: none;
+        filter: brightness(0.95);
+      }
+
+      /* event list */
+      .ev-row {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        padding: 14px 20px;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .ev-row:last-child {
+        border-bottom: 0;
+      }
+      .ev-row:target {
+        background: #fffbeb;
+      }
+
+      /* roles, rekap */
+      .role-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+      .role-card {
+        margin: 0;
+      }
+      .role-card ul {
+        margin: 10px 0 0;
+        padding-left: 18px;
+        color: #374151;
+        font-size: 13.5px;
+      }
+      .bar {
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 3px;
+      }
+      .bar-fill {
+        height: 100%;
+        background: var(--green);
+        border-radius: 6px;
+      }
+      .bar-fill.mid {
+        background: #f59e0b;
+      }
+      .bar-fill.lo {
+        background: var(--red);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+      }
+      .err-code {
+        font-size: 56px;
+        font-weight: 800;
+        color: var(--primary-2);
+      }
+
+      /* login */
+      .login-page {
+        background: linear-gradient(
+          135deg,
+          #0f1e46 0%,
+          #1e3a8a 55%,
+          #0e7490 100%
+        );
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+      .login-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        max-width: 860px;
+        width: 100%;
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+      }
+      .login-side {
+        background: linear-gradient(160deg, #1e40af, #0f1e46);
+        color: #e2e8f0;
+        padding: 44px 38px;
+      }
+      .login-side h1 {
+        color: #fff;
+        font-size: 1.6rem;
+      }
+      .login-side p {
+        color: #93c5fd;
+        margin: 4px 0 26px;
+      }
+      .login-points {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+      }
+      .login-points li {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .login-card {
+        padding: 44px 38px;
+      }
+      .login-card h2 {
+        font-size: 1.4rem;
+      }
+      .login-card .muted {
+        margin: 4px 0 22px;
+      }
+
+      /* toasts */
+      .toasts {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        display: grid;
+        gap: 10px;
+        z-index: 100;
+        max-width: 360px;
+      }
+      .toast {
+        background: #0f172a;
+        color: #fff;
+        border-radius: 12px;
+        padding: 13px 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        display: flex;
+        gap: 12px;
+        animation: slide 0.25s ease;
+      }
+      .toast .t-ic {
+        color: #fbbf24;
+      }
+      .toast b {
+        display: block;
+      }
+      .toast a {
+        color: #93c5fd;
+      }
+      .toast .t-x {
+        background: none;
+        border: 0;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 18px;
+        margin-left: auto;
+        align-self: flex-start;
+      }
+      @keyframes slide {
+        from {
+          transform: translateY(10px);
+          opacity: 0;
+        }
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+
+      /* responsive */
+      @media (max-width: 1100px) {
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .dl {
+          grid-template-columns: 1fr 1fr;
+        }
+        .dl .span-2 {
+          grid-column: span 2;
+        }
+      }
+      @media (max-width: 900px) {
+        .grid-2,
+        .lapor-grid,
+        .role-info {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        body.nav-open .sidebar {
+          transform: none;
+        }
+        body.nav-open .backdrop {
+          display: block;
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.4);
+          z-index: 35;
+        }
+        .main {
+          margin-left: 0;
+        }
+        .menu-btn {
+          display: inline-grid;
+        }
+        .user-meta {
+          display: none;
+        }
+        .content {
+          padding: 18px 14px 30px;
+        }
+        .topbar {
+          padding: 10px 14px;
+        }
+        .login-wrap {
+          grid-template-columns: 1fr;
+        }
+        .login-side {
+          display: none;
+        }
+        .cal-cell {
+          min-height: 80px;
+          padding: 3px;
+        }
+        .cal-item {
+          font-size: 10px;
+          padding: 1px 3px;
+        }
+        .cal-item b {
+          display: none;
+        }
+        .filters input[type="search"] {
+          min-width: 0;
+          width: 100%;
+        }
+      }
+      @media (max-width: 600px) {
+        .stats {
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .form-grid,
+        .status-choice {
+          grid-template-columns: 1fr;
+        }
+        .span-2 {
+          grid-column: auto;
+        }
+        .dl {
+          grid-template-columns: 1fr;
+        }
+        .dl .span-2 {
+          grid-column: auto;
+        }
+        .task {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        display: grid;
+        place-items: center;
+        z-index: 200;
+        padding: 16px;
+      }
+      .modal-box {
+        background: #fff;
+        border-radius: 14px;
+        padding: 22px;
+        max-width: 520px;
+        width: 100%;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        max-height: 90vh;
+        overflow: auto;
+      }
+      .modal-box h3 {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .demo-note {
+        font-size: 11.5px;
+        color: #94a3b8;
+        text-align: center;
+      }
+      .demo-login {
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px dashed var(--line);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+      .demo-login .small {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="toasts" class="toasts"></div>
+    <div id="modal" class="modal" hidden></div>
+    <script>
+      window.__ICONS__ = {
+        home: '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+        rapat:
+          '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+        tugas:
+          '<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>',
+        kalender:
+          '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v4M16 2v4M8 14h2M14 14h2M8 17h2"/>',
+        bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
+        pegawai:
+          '<circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a4 4 0 0 0-3-3.9"/>',
+        kunci:
+          '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+        chart: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-6"/>',
+        gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+        logout:
+          '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
+        plus: '<path d="M12 5v14M5 12h14"/>',
+        edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+        trash: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>',
+        eye: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>',
+        file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+        download:
+          '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+        menu: '<path d="M3 6h18M3 12h18M3 18h18"/>',
+        clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+        pin: '<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+        send: '<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',
+        "chev-l": '<path d="M15 18l-6-6 6-6"/>',
+        "chev-r": '<path d="M9 18l6-6-6-6"/>',
+        user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
+      };
+    </script>
+    <script>
+      (function () {
+        "use strict";
+        /* ====================== util ====================== */
+        var ICONS = window.__ICONS__;
+        function icon(n, s) {
+          s = s || 18;
+          return (
+            '<svg class="ic" width="' +
+            s +
+            '" height="' +
+            s +
+            '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            (ICONS[n] || "") +
+            "</svg>"
+          );
+        }
+        function esc(s) {
+          return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+            return {
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[c];
+          });
+        }
+        var HARI = [
+          "Minggu",
+          "Senin",
+          "Selasa",
+          "Rabu",
+          "Kamis",
+          "Jumat",
+          "Sabtu",
+        ];
+        var BULAN = [
+          "",
+          "Januari",
+          "Februari",
+          "Maret",
+          "April",
+          "Mei",
+          "Juni",
+          "Juli",
+          "Agustus",
+          "September",
+          "Oktober",
+          "November",
+          "Desember",
+        ];
+        function pad(n) {
+          return (n < 10 ? "0" : "") + n;
+        }
+        function toStr(d) {
+          return (
+            d.getFullYear() +
+            "-" +
+            pad(d.getMonth() + 1) +
+            "-" +
+            pad(d.getDate()) +
+            "T" +
+            pad(d.getHours()) +
+            ":" +
+            pad(d.getMinutes())
+          );
+        }
+        function dateKey(d) {
+          return toStr(d).slice(0, 10);
+        }
+        function parse(s) {
+          if (!s) return null;
+          var m = /^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/.exec(s);
+          if (!m) return null;
+          return new Date(+m[1], m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0));
+        }
+        function nowStr() {
+          return toStr(new Date());
+        }
+        function tgl(s, hari) {
+          var d = parse(s);
+          if (!d) return "-";
+          var t =
+            d.getDate() + " " + BULAN[d.getMonth() + 1] + " " + d.getFullYear();
+          return hari === false ? t : HARI[d.getDay()] + ", " + t;
+        }
+        function jam(s) {
+          var d = parse(s);
+          return d && s.length > 10
+            ? pad(d.getHours()) + "." + pad(d.getMinutes())
+            : "-";
+        }
+        function tgljam(s) {
+          var d = parse(s);
+          if (!d) return "-";
+          return (
+            d.getDate() +
+            " " +
+            BULAN[d.getMonth() + 1].slice(0, 3) +
+            " " +
+            d.getFullYear() +
+            ", " +
+            jam(s)
+          );
+        }
+        function bulanNama(ym) {
+          if (!ym) return "Semua periode";
+          var p = ym.split("-");
+          return BULAN[+p[1]] + " " + p[0];
+        }
+        function relatif(s) {
+          var d = parse(s);
+          if (!d) return "";
+          var mins = Math.floor((d - new Date()) / 60000);
+          if (mins < 0 && mins > -60) return "sedang berlangsung";
+          if (mins < 0) {
+            var dd = Math.floor(-mins / 1440);
+            return dd === 0 ? "hari ini" : dd + " hari lalu";
+          }
+          if (mins < 60) return mins + " menit lagi";
+          if (mins < 1440) return Math.floor(mins / 60) + " jam lagi";
+          return Math.floor(mins / 1440) + " hari lagi";
+        }
+        function nextId(arr) {
+          return (
+            arr.reduce(function (m, x) {
+              return Math.max(m, x.id);
+            }, 0) + 1
+          );
+        }
+        function byId(arr, id) {
+          id = +id;
+          for (var i = 0; i < arr.length; i++)
+            if (arr[i].id === id) return arr[i];
+          return null;
+        }
+        function initials(s) {
+          return s
+            .split(/\s+/)
+            .slice(0, 2)
+            .map(function (w) {
+              return w[0] ? w[0].toUpperCase() : "";
+            })
+            .join("");
+        }
+
+        /* ====================== storage ====================== */
+        var KEY = "mk-demo-v1",
+          mem = null;
+        function load() {
+          try {
+            return localStorage.getItem(KEY);
+          } catch (e) {
+            return mem;
+          }
+        }
+        function save() {
+          var v = JSON.stringify(DB);
+          try {
+            localStorage.setItem(KEY, v);
+          } catch (e) {
+            mem = v;
+          }
+        }
+        var DB;
+
+        function seed() {
+          var now = new Date();
+          now.setSeconds(0, 0);
+          function at(days, h, m) {
+            var d = new Date(now);
+            d.setDate(d.getDate() + days);
+            d.setHours(h, m, 0, 0);
+            return toStr(d);
+          }
+          var ts = nowStr();
+          DB = {
+            settings: {
+              nama_aplikasi: "SIMONKIN",
+              nama_instansi: "Bagian Umum",
+              pengingat_rapat_menit: 60,
+            },
+            pegawai: [
+              {
+                id: 1,
+                nip: "198501012010011001",
+                nama: "Budi Santoso",
+                jabatan: "Analis Kebijakan",
+                unit: "Subbag Umum",
+                no_hp: "081200000001",
+                email: "budi@contoh.go.id",
+                aktif: true,
+              },
+              {
+                id: 2,
+                nip: "199002022015032002",
+                nama: "Siti Rahmawati",
+                jabatan: "Pranata Humas",
+                unit: "Subbag Humas",
+                no_hp: "081200000002",
+                email: "siti@contoh.go.id",
+                aktif: true,
+              },
+              {
+                id: 3,
+                nip: "198703032012121003",
+                nama: "Ahmad Fauzi",
+                jabatan: "Pengelola Keuangan",
+                unit: "Subbag Keuangan",
+                no_hp: "081200000003",
+                email: "ahmad@contoh.go.id",
+                aktif: true,
+              },
+              {
+                id: 4,
+                nip: "199204042019022004",
+                nama: "Dewi Lestari",
+                jabatan: "Arsiparis",
+                unit: "Subbag Umum",
+                no_hp: "081200000004",
+                email: "dewi@contoh.go.id",
+                aktif: true,
+              },
+              {
+                id: 5,
+                nip: "198805052014031005",
+                nama: "Rizky Pratama",
+                jabatan: "Pranata Komputer",
+                unit: "Subbag Program",
+                no_hp: "081200000005",
+                email: "rizky@contoh.go.id",
+                aktif: true,
+              },
+            ],
+            users: [
+              {
+                id: 1,
+                username: "admin",
+                password: "admin123",
+                role: "admin",
+                pegawai_id: null,
+                aktif: true,
+                last_login: null,
+              },
+              {
+                id: 2,
+                username: "budi",
+                password: "user123",
+                role: "user",
+                pegawai_id: 1,
+                aktif: true,
+                last_login: null,
+              },
+              {
+                id: 3,
+                username: "siti",
+                password: "user123",
+                role: "user",
+                pegawai_id: 2,
+                aktif: true,
+                last_login: null,
+              },
+            ],
+            rapat: [
+              {
+                id: 1,
+                no_dispo_kabag: "045/DISPO/KBG/X/2026",
+                no_surat_undangan: "005/123/Bappeda",
+                asal_undangan: "Bappeda Kabupaten",
+                perihal: "Rapat Koordinasi Penyusunan RKPD Tahun 2027",
+                pimpinan_rapat: "Sekretaris Daerah",
+                tempat: "Ruang Rapat Bappeda Lt. 2",
+                waktu: at(-3, 9, 0),
+                keterangan: "Membawa bahan paparan",
+              },
+              {
+                id: 2,
+                no_dispo_kabag: "046/DISPO/KBG/X/2026",
+                no_surat_undangan: "005/456/Diskominfo",
+                asal_undangan: "Dinas Kominfo",
+                perihal: "Sosialisasi Keamanan Informasi dan Tata Kelola SPBE",
+                pimpinan_rapat: "Kepala Dinas Kominfo",
+                tempat: "Aula Diskominfo",
+                waktu: at(-1, 13, 30),
+                keterangan: "",
+              },
+              {
+                id: 3,
+                no_dispo_kabag: "047/DISPO/KBG/X/2026",
+                no_surat_undangan: "005/789/BKPSDM",
+                asal_undangan: "BKPSDM",
+                perihal: "Rapat Evaluasi Kinerja Pegawai Triwulan III",
+                pimpinan_rapat: "Kepala BKPSDM",
+                tempat: "Ruang Rapat Utama",
+                waktu: at(2, 10, 0),
+                keterangan: "Pakaian dinas harian",
+              },
+              {
+                id: 4,
+                no_dispo_kabag: "048/DISPO/KBG/X/2026",
+                no_surat_undangan: "005/321/Setda",
+                asal_undangan: "Sekretariat Daerah",
+                perihal: "Persiapan Peringatan Hari Jadi Kabupaten",
+                pimpinan_rapat: "Asisten Administrasi Umum",
+                tempat: "Ruang Rapat Setda",
+                waktu: at(5, 8, 30),
+                keterangan: "",
+              },
+            ],
+            dispo: [
+              {
+                id: 1,
+                rapat_id: 1,
+                pegawai_id: 1,
+                status: "TIDAK EFEKTIF",
+                file: null,
+                catatan: "Rapat ditunda oleh penyelenggara.",
+                dilaporkan_at: ts,
+              },
+              {
+                id: 2,
+                rapat_id: 1,
+                pegawai_id: 3,
+                status: "EFEKTIF",
+                file: { name: "notulen-rkpd.pdf", size: 245000, data: null },
+                catatan: "Hadir, notulen terlampir.",
+                dilaporkan_at: ts,
+              },
+              {
+                id: 3,
+                rapat_id: 2,
+                pegawai_id: 2,
+                status: null,
+                file: null,
+                catatan: "",
+                dilaporkan_at: null,
+              },
+              {
+                id: 4,
+                rapat_id: 2,
+                pegawai_id: 5,
+                status: null,
+                file: null,
+                catatan: "",
+                dilaporkan_at: null,
+              },
+              {
+                id: 5,
+                rapat_id: 3,
+                pegawai_id: 1,
+                status: null,
+                file: null,
+                catatan: "",
+                dilaporkan_at: null,
+              },
+              {
+                id: 6,
+                rapat_id: 3,
+                pegawai_id: 2,
+                status: null,
+                file: null,
+                catatan: "",
+                dilaporkan_at: null,
+              },
+              {
+                id: 7,
+                rapat_id: 3,
+                pegawai_id: 4,
+                status: null,
+                file: null,
+                catatan: "",
+                dilaporkan_at: null,
+              },
+              {
+                id: 8,
+                rapat_id: 4,
+                pegawai_id: 1,
+                status: null,
+                file: null,
+                catatan: "",
+                dilaporkan_at: null,
+              },
+              {
+                id: 9,
+                rapat_id: 4,
+                pegawai_id: 5,
+                status: null,
+                file: null,
+                catatan: "",
+                dilaporkan_at: null,
+              },
+            ],
+            events: [
+              {
+                id: 1,
+                judul: "Batas pengumpulan laporan bulanan",
+                deskripsi:
+                  "Seluruh pegawai mengumpulkan laporan kinerja bulanan.",
+                jenis: "reminder",
+                mulai: at(1, 15, 0),
+                selesai: "",
+                ingatkan_menit: 1440,
+                untuk_pegawai_id: null,
+              },
+              {
+                id: 2,
+                judul: "Apel Pagi Gabungan",
+                deskripsi: "Halaman kantor",
+                jenis: "event",
+                mulai: at(4, 7, 30),
+                selesai: at(4, 8, 30),
+                ingatkan_menit: 60,
+                untuk_pegawai_id: null,
+              },
+            ],
+            session: null,
+          };
+          save();
+        }
+        try {
+          DB = JSON.parse(load() || "null");
+        } catch (e) {
+          DB = null;
+        }
+        if (!DB || !DB.pegawai) seed();
+
+        /* ====================== session ====================== */
+        function me() {
+          return DB.session ? byId(DB.users, DB.session) : null;
+        }
+        function isAdmin() {
+          var u = me();
+          return !!(u && u.role === "admin");
+        }
+        function myPid() {
+          var u = me();
+          return u ? u.pegawai_id : null;
+        }
+        function pegNama(id) {
+          var p = byId(DB.pegawai, id);
+          return p ? p.nama : "-";
+        }
+        function dispoOf(rid) {
+          return DB.dispo
+            .filter(function (d) {
+              return d.rapat_id === rid;
+            })
+            .sort(function (a, b) {
+              return pegNama(a.pegawai_id).localeCompare(pegNama(b.pegawai_id));
+            });
+        }
+        function visibleEvents() {
+          var pid = myPid();
+          return DB.events.filter(function (e) {
+            return (
+              isAdmin() || !e.untuk_pegawai_id || e.untuk_pegawai_id === pid
+            );
+          });
+        }
+        function canDispo(d) {
+          return isAdmin() || (myPid() && d.pegawai_id === myPid());
+        }
+
+        /* ====================== ui helpers ====================== */
+        function badge(st) {
+          if (st === "EFEKTIF")
+            return '<span class="badge b-green">EFEKTIF</span>';
+          if (st === "TIDAK EFEKTIF")
+            return '<span class="badge b-red">TIDAK EFEKTIF</span>';
+          return '<span class="badge b-amber">BELUM LAPOR</span>';
+        }
+        function fileCell(d) {
+          if (d.status === "TIDAK EFEKTIF")
+            return '<span class="muted small">— (file kosong otomatis)</span>';
+          if (d.file)
+            return (
+              '<a class="file-link" href="javascript:void 0" data-act="view-file" data-id="' +
+              d.id +
+              '">' +
+              icon("file", 14) +
+              " " +
+              esc(d.file.name) +
+              "</a>"
+            );
+          return '<span class="muted small">-</span>';
+        }
+        function dateBox(s, cls) {
+          var d = parse(s);
+          return (
+            '<div class="date-box ' +
+            (cls || "") +
+            '"><b>' +
+            pad(d.getDate()) +
+            "</b><span>" +
+            BULAN[d.getMonth() + 1].slice(0, 3) +
+            "</span></div>"
+          );
+        }
+        function delBtn(act, id, msg) {
+          return (
+            '<button class="btn btn-sm btn-ghost-danger" data-act="' +
+            act +
+            '" data-id="' +
+            id +
+            '" data-msg="' +
+            esc(msg || "Yakin ingin menghapus data ini?") +
+            '" title="Hapus">' +
+            icon("trash", 15) +
+            "</button>"
+          );
+        }
+        function opt(v, l, sel) {
+          return (
+            '<option value="' +
+            esc(v) +
+            '"' +
+            (String(sel) === String(v) ? " selected" : "") +
+            ">" +
+            esc(l) +
+            "</option>"
+          );
+        }
+        var flashQ = [];
+        function flash(msg, cat) {
+          flashQ.push({ m: msg, c: cat || "success" });
+        }
+        function toast(html, ms) {
+          var box = document.getElementById("toasts");
+          var el = document.createElement("div");
+          el.className = "toast";
+          el.innerHTML =
+            '<div class="t-ic">🔔</div><div>' +
+            html +
+            '</div><button class="t-x">×</button>';
+          el.querySelector(".t-x").onclick = function () {
+            el.remove();
+          };
+          box.appendChild(el);
+          setTimeout(function () {
+            el.remove();
+          }, ms || 12000);
+        }
+        function modal(html) {
+          var m = document.getElementById("modal");
+          m.innerHTML = '<div class="modal-box">' + html + "</div>";
+          m.hidden = false;
+        }
+        function closeModal() {
+          var m = document.getElementById("modal");
+          m.hidden = true;
+          m.innerHTML = "";
+        }
+        var pendingConfirm = null;
+        function confirmBox(msg, yes) {
+          pendingConfirm = yes;
+          modal(
+            "<h3>Konfirmasi</h3><p>" +
+              esc(msg) +
+              '</p><div class="form-actions"><button class="btn btn-light" data-act="modal-close">Batal</button><button class="btn btn-danger" data-act="confirm-yes">Ya, hapus</button></div>',
+          );
+        }
+        function go(h) {
+          if (location.hash === h) render();
+          else location.hash = h;
+        }
+
+        /* ====================== routing ====================== */
+        var ADMIN_ROUTES = [
+          "rapat",
+          "event-new",
+          "event-edit",
+          "pegawai",
+          "pengguna",
+          "rekap",
+          "pengaturan",
+        ];
+        function route() {
+          var h = (location.hash || "#/dashboard").slice(2);
+          var q = {};
+          var parts = h.split("?");
+          if (parts[1])
+            parts[1].split("&").forEach(function (kv) {
+              var p = kv.split("=");
+              q[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || "");
+            });
+          return { seg: parts[0].split("/"), q: q };
+        }
+
+        function render() {
+          var app = document.getElementById("app");
+          if (!me()) {
+            app.innerHTML = viewLogin();
+            return;
+          }
+          var r = route(),
+            s = r.seg,
+            view,
+            title;
+          try {
+            switch (s[0]) {
+              case "rapat":
+                if (!isAdmin() && !(s[1] && !s[2] && s[1] !== "baru"))
+                  throw 403;
+                if (s[1] === "baru") {
+                  title = "Tambah Jadwal Rapat";
+                  view = viewRapatForm(null, r.q);
+                } else if (s[1] && s[2] === "edit") {
+                  title = "Edit Jadwal Rapat";
+                  view = viewRapatForm(+s[1]);
+                } else if (s[1]) {
+                  title = "Detail Rapat";
+                  view = viewRapatDetail(+s[1]);
+                } else {
+                  title = "Jadwal Rapat";
+                  view = viewRapatList();
+                }
+                break;
+              case "tugas":
+                title = "Tugas Saya";
+                view = viewTugas(r.q.tab || "semua");
+                break;
+              case "lapor":
+                title = "Laporan Status Kinerja";
+                view = viewLapor(+s[1]);
+                break;
+              case "kalender":
+                title = "Kalender";
+                view = viewKalender(r.q);
+                break;
+              case "event":
+                if ((s[1] === "baru" || s[2] === "edit") && !isAdmin())
+                  throw 403;
+                if (s[1] === "baru") {
+                  title = "Tambah Event / Reminder";
+                  view = viewEventForm(null, r.q);
+                } else if (s[2] === "edit") {
+                  title = "Edit Event / Reminder";
+                  view = viewEventForm(+s[1]);
+                } else {
+                  title = isAdmin() ? "Event & Reminder" : "Pengingat & Event";
+                  view = viewEventList(r.q.tab || "mendatang");
+                }
+                break;
+              case "pegawai":
+                if (!isAdmin()) throw 403;
+                if (s[1] === "baru") {
+                  title = "Tambah Data Pegawai";
+                  view = viewPegawaiForm(null);
+                } else if (s[2] === "edit") {
+                  title = "Edit Data Pegawai";
+                  view = viewPegawaiForm(+s[1]);
+                } else {
+                  title = "Data Pegawai";
+                  view = viewPegawaiList(r.q.q || "");
+                }
+                break;
+              case "pengguna":
+                if (!isAdmin()) throw 403;
+                if (s[1] === "baru") {
+                  title = "Tambah Akun Pengguna";
+                  view = viewPenggunaForm(null, r.q);
+                } else if (s[2] === "edit") {
+                  title = "Edit Akun Pengguna";
+                  view = viewPenggunaForm(+s[1]);
+                } else {
+                  title = "Akses Pengguna";
+                  view = viewPenggunaList();
+                }
+                break;
+              case "rekap":
+                if (!isAdmin()) throw 403;
+                title = "Rekap Kinerja Pegawai";
+                view = viewRekap(
+                  r.q.bulan === undefined
+                    ? dateKey(new Date()).slice(0, 7)
+                    : r.q.bulan,
+                );
+                break;
+              case "pengaturan":
+                if (!isAdmin()) throw 403;
+                title = "Pengaturan Sistem";
+                view = viewPengaturan();
+                break;
+              case "password":
+                title = "Ganti Password";
+                view = viewPassword();
+                break;
+              default:
+                title = "Dashboard";
+                view = viewDashboard();
+            }
+          } catch (e) {
+            if (e === 403 || e === 404) {
+              title = "Terjadi kendala";
+              view =
+                '<div class="card empty-state"><div class="err-code">' +
+                e +
+                "</div><p>" +
+                (e === 403
+                  ? "Anda tidak memiliki akses ke halaman ini."
+                  : "Data tidak ditemukan.") +
+                '</p><a href="#/dashboard" class="btn btn-primary">Kembali ke Dashboard</a></div>';
+            } else throw e;
+          }
+          app.innerHTML = layout(title, view, s[0] || "dashboard", s);
+          document.body.classList.remove("nav-open");
+          window.scrollTo(0, 0);
+          afterRender();
+        }
+
+        function layout(title, content, sec, seg) {
+          var u = me(),
+            pid = myPid(),
+            S = DB.settings;
+          var belum = pid
+            ? DB.dispo.filter(function (d) {
+                return d.pegawai_id === pid && !d.status;
+              }).length
+            : 0;
+          function nav(h, ic, label, active, extra) {
+            return (
+              '<a href="' +
+              h +
+              '" class="' +
+              (active ? "active" : "") +
+              '">' +
+              icon(ic) +
+              " " +
+              label +
+              (extra || "") +
+              "</a>"
+            );
+          }
+          var userTask =
+            sec === "tugas" ||
+            sec === "lapor" ||
+            (sec === "rapat" && !isAdmin());
+          var n = nav("#/dashboard", "home", "Dashboard", sec === "dashboard");
+          if (isAdmin())
+            n +=
+              '<div class="nav-label">Kegiatan</div>' +
+              nav("#/rapat", "rapat", "Jadwal Rapat", sec === "rapat");
+          if (pid)
+            n += nav(
+              "#/tugas",
+              "tugas",
+              "Tugas Saya",
+              userTask,
+              belum ? '<span class="nav-badge">' + belum + "</span>" : "",
+            );
+          n += nav("#/kalender", "kalender", "Kalender", sec === "kalender");
+          n += nav(
+            "#/event",
+            "bell",
+            isAdmin() ? "Event &amp; Reminder" : "Pengingat &amp; Event",
+            sec === "event",
+          );
+          if (isAdmin()) {
+            n +=
+              '<div class="nav-label">Pengaturan Sistem</div>' +
+              nav("#/pegawai", "pegawai", "Data Pegawai", sec === "pegawai") +
+              nav("#/pengguna", "kunci", "Akses Pengguna", sec === "pengguna") +
+              nav("#/rekap", "chart", "Rekap Kinerja", sec === "rekap") +
+              nav("#/pengaturan", "gear", "Pengaturan", sec === "pengaturan");
+          }
+          var nm = pid ? pegNama(pid) : u.username;
+          var fl = flashQ
+            .map(function (f) {
+              return (
+                '<div class="alert alert-' + f.c + '">' + esc(f.m) + "</div>"
+              );
+            })
+            .join("");
+          flashQ = [];
+          return (
+            '<div class="layout"><aside class="sidebar"><div class="brand"><div class="logo">' +
+            esc(initials(S.nama_aplikasi)) +
+            '</div><div><div class="brand-title">' +
+            esc(S.nama_aplikasi) +
+            '</div><div class="brand-sub">' +
+            esc(S.nama_instansi) +
+            "</div></div></div>" +
+            '<nav class="nav">' +
+            n +
+            '</nav><div class="sidebar-foot"><div class="demo-note">Mode demo · data tersimpan di browser</div></div></aside><div class="backdrop" data-act="nav-close"></div>' +
+            '<main class="main"><header class="topbar"><button class="icon-btn menu-btn" data-act="nav-toggle">' +
+            icon("menu") +
+            '</button><h1 class="page-title">' +
+            esc(title) +
+            "</h1>" +
+            '<div class="user-box"><div class="avatar">' +
+            esc(nm[0].toUpperCase()) +
+            '</div><div class="user-meta"><div class="user-name">' +
+            esc(nm) +
+            '</div><div class="user-role">' +
+            (isAdmin() ? "Administrator" : "Pengguna") +
+            " · @" +
+            esc(u.username) +
+            "</div></div>" +
+            '<a class="icon-btn" href="#/password" title="Ganti password">' +
+            icon("kunci") +
+            '</a><button class="icon-btn" data-act="logout" title="Keluar">' +
+            icon("logout") +
+            "</button></div></header>" +
+            '<div class="content">' +
+            fl +
+            content +
+            "</div></main></div>"
+          );
+        }
+
+        /* ====================== views ====================== */
+        function viewLogin() {
+          var S = DB.settings;
+          var fl = flashQ
+            .map(function (f) {
+              return (
+                '<div class="alert alert-' + f.c + '">' + esc(f.m) + "</div>"
+              );
+            })
+            .join("");
+          flashQ = [];
+          return (
+            '<div class="login-page"><div class="login-wrap"><div class="login-side"><div class="logo big">' +
+            icon("chart", 30) +
+            "</div><h1>" +
+            esc(S.nama_aplikasi) +
+            "</h1><p>" +
+            esc(S.nama_instansi) +
+            "</p>" +
+            '<ul class="login-points"><li>' +
+            icon("rapat", 16) +
+            " Jadwal rapat &amp; disposisi pegawai</li><li>" +
+            icon("tugas", 16) +
+            " Laporan status kinerja dengan bukti</li><li>" +
+            icon("kalender", 16) +
+            " Kalender, event &amp; pengingat</li></ul></div>" +
+            '<form class="login-card" data-form="login"><h2>Masuk</h2><p class="muted">Gunakan akun yang diberikan oleh admin.</p>' +
+            fl +
+            '<label class="field"><span>Username</span><input name="username" required autofocus></label><label class="field"><span>Password</span><input name="password" type="password" required></label>' +
+            '<button class="btn btn-primary w100">Masuk</button>' +
+            '<div class="demo-login"><div class="small muted">Coba cepat (akun demo):</div><button type="button" class="btn btn-sm btn-light" data-act="quick" data-u="admin" data-p="admin123">Admin</button> <button type="button" class="btn btn-sm btn-light" data-act="quick" data-u="budi" data-p="user123">User: Budi</button> <button type="button" class="btn btn-sm btn-light" data-act="quick" data-u="siti" data-p="user123">User: Siti</button></div></form></div></div>'
+          );
+        }
+
+        function statCard(ic, c, num, lbl) {
+          return (
+            '<div class="stat"><div class="stat-ic ' +
+            c +
+            '">' +
+            icon(ic) +
+            '</div><div><div class="stat-num">' +
+            num +
+            '</div><div class="stat-lbl">' +
+            lbl +
+            "</div></div></div>"
+          );
+        }
+
+        function viewDashboard() {
+          var now = nowStr(),
+            today = now.slice(0, 10),
+            bulan = today.slice(0, 7),
+            week = toStr(new Date(Date.now() + 7 * 864e5));
+          var h =
+            '<div class="welcome"><div><h2>Selamat datang, ' +
+            esc(myPid() ? pegNama(myPid()) : me().username) +
+            ' 👋</h2><p class="muted">' +
+            tgl(now) +
+            (isAdmin()
+              ? " · Ringkasan kegiatan bulan " + bulanNama(bulan)
+              : "") +
+            "</p></div>";
+          if (isAdmin())
+            h +=
+              '<div class="actions"><a href="#/rapat/baru" class="btn btn-primary">' +
+              icon("plus", 16) +
+              ' Jadwal Rapat</a><a href="#/event/baru" class="btn btn-light">' +
+              icon("bell", 16) +
+              " Event / Reminder</a></div>";
+          h += "</div>";
+          if (!isAdmin() && !myPid())
+            h +=
+              '<div class="alert alert-error">Akun Anda belum terhubung dengan data pegawai. Hubungi admin.</div>';
+          var up, perlu;
+          if (isAdmin()) {
+            var rb = DB.rapat
+              .filter(function (r) {
+                return r.waktu.slice(0, 7) === bulan;
+              })
+              .map(function (r) {
+                return r.id;
+              });
+            var ds = DB.dispo.filter(function (d) {
+              return rb.indexOf(d.rapat_id) > -1;
+            });
+            h +=
+              '<div class="stats">' +
+              statCard("rapat", "c-blue", rb.length, "Rapat bulan ini") +
+              statCard(
+                "tugas",
+                "c-green",
+                ds.filter(function (d) {
+                  return d.status === "EFEKTIF";
+                }).length,
+                "Disposisi Efektif",
+              ) +
+              statCard(
+                "clock",
+                "c-red",
+                ds.filter(function (d) {
+                  return d.status === "TIDAK EFEKTIF";
+                }).length,
+                "Tidak Efektif",
+              ) +
+              statCard(
+                "bell",
+                "c-amber",
+                ds.filter(function (d) {
+                  return !d.status;
+                }).length,
+                "Belum lapor",
+              ) +
+              "</div>";
+            up = DB.rapat
+              .filter(function (r) {
+                return r.waktu >= today && r.waktu <= week;
+              })
+              .sort(function (a, b) {
+                return a.waktu < b.waktu ? -1 : 1;
+              });
+            perlu = DB.dispo.filter(function (d) {
+              var r = byId(DB.rapat, d.rapat_id);
+              return !d.status && r && r.waktu < now;
+            });
+          } else {
+            var pid = myPid();
+            var mine = DB.dispo.filter(function (d) {
+              return d.pegawai_id === pid;
+            });
+            h +=
+              '<div class="stats">' +
+              statCard("rapat", "c-blue", mine.length, "Total tugas") +
+              statCard(
+                "bell",
+                "c-amber",
+                mine.filter(function (d) {
+                  return !d.status;
+                }).length,
+                "Belum dilaporkan",
+              ) +
+              statCard(
+                "tugas",
+                "c-green",
+                mine.filter(function (d) {
+                  return d.status === "EFEKTIF";
+                }).length,
+                "Efektif",
+              ) +
+              statCard(
+                "clock",
+                "c-red",
+                mine.filter(function (d) {
+                  return d.status === "TIDAK EFEKTIF";
+                }).length,
+                "Tidak Efektif",
+              ) +
+              "</div>";
+            up = mine
+              .map(function (d) {
+                return byId(DB.rapat, d.rapat_id);
+              })
+              .filter(function (r) {
+                return r.waktu >= today;
+              })
+              .sort(function (a, b) {
+                return a.waktu < b.waktu ? -1 : 1;
+              });
+            perlu = mine.filter(function (d) {
+              return !d.status && byId(DB.rapat, d.rapat_id).waktu < now;
+            });
+          }
+          h +=
+            '<div class="grid-2"><section class="card"><div class="card-head"><h3>' +
+            (isAdmin()
+              ? "Rapat 7 hari ke depan"
+              : "Rapat mendatang yang ditugaskan") +
+            '</h3><a href="#/kalender" class="link">Lihat kalender</a></div>';
+          h += up.length
+            ? up
+                .map(function (r) {
+                  return (
+                    '<a class="list-item" href="#/rapat/' +
+                    r.id +
+                    '">' +
+                    dateBox(r.waktu) +
+                    '<div class="li-body"><div class="li-title">' +
+                    esc(r.perihal) +
+                    '</div><div class="li-meta">' +
+                    icon("clock", 13) +
+                    " " +
+                    jam(r.waktu) +
+                    " · " +
+                    icon("pin", 13) +
+                    " " +
+                    esc(r.tempat) +
+                    "</div>" +
+                    (isAdmin()
+                      ? '<div class="li-meta">Disposisi: ' +
+                        esc(
+                          dispoOf(r.id)
+                            .map(function (d) {
+                              return pegNama(d.pegawai_id);
+                            })
+                            .join(", "),
+                        ) +
+                        "</div>"
+                      : "") +
+                    '</div><span class="chip">' +
+                    relatif(r.waktu) +
+                    "</span></a>"
+                  );
+                })
+                .join("")
+            : '<p class="empty">Tidak ada rapat terjadwal.</p>';
+          h +=
+            '</section><section class="card"><div class="card-head"><h3>' +
+            (isAdmin() ? "Menunggu laporan kinerja" : "Perlu Anda laporkan") +
+            "</h3></div>";
+          h += perlu.length
+            ? perlu
+                .map(function (d) {
+                  var r = byId(DB.rapat, d.rapat_id);
+                  if (isAdmin())
+                    return (
+                      '<a class="list-item" href="#/rapat/' +
+                      r.id +
+                      '"><div class="avatar sm">' +
+                      esc(pegNama(d.pegawai_id)[0]) +
+                      '</div><div class="li-body"><div class="li-title">' +
+                      esc(pegNama(d.pegawai_id)) +
+                      '</div><div class="li-meta">' +
+                      esc(r.perihal) +
+                      " · " +
+                      tgljam(r.waktu) +
+                      "</div></div>" +
+                      badge(null) +
+                      "</a>"
+                    );
+                  return (
+                    '<div class="list-item">' +
+                    dateBox(r.waktu, "warn") +
+                    '<div class="li-body"><div class="li-title">' +
+                    esc(r.perihal) +
+                    '</div><div class="li-meta">' +
+                    tgljam(r.waktu) +
+                    " · " +
+                    esc(r.tempat) +
+                    '</div></div><a href="#/lapor/' +
+                    d.id +
+                    '" class="btn btn-sm btn-primary">' +
+                    icon("send", 14) +
+                    " Lapor</a></div>"
+                  );
+                })
+                .join("")
+            : '<p class="empty">✅ Semua laporan sudah lengkap.</p>';
+          h += "</section></div>";
+          var evs = visibleEvents()
+            .filter(function (e) {
+              return (e.selesai || e.mulai).slice(0, 10) >= today;
+            })
+            .sort(function (a, b) {
+              return a.mulai < b.mulai ? -1 : 1;
+            })
+            .slice(0, 6);
+          h +=
+            '<section class="card"><div class="card-head"><h3>Event &amp; pengingat mendatang</h3><a href="#/event" class="link">Semua</a></div><div class="event-grid">';
+          h += evs.length
+            ? evs
+                .map(function (e) {
+                  return (
+                    '<div class="event-card ' +
+                    e.jenis +
+                    '"><div class="ev-type">' +
+                    (e.jenis === "reminder" ? "Reminder" : "Event") +
+                    (e.untuk_pegawai_id
+                      ? " · untuk " + esc(pegNama(e.untuk_pegawai_id))
+                      : "") +
+                    '</div><div class="ev-title">' +
+                    esc(e.judul) +
+                    '</div><div class="li-meta">' +
+                    tgljam(e.mulai) +
+                    (e.selesai ? " – " + tgljam(e.selesai) : "") +
+                    "</div>" +
+                    (e.deskripsi
+                      ? '<div class="small muted">' +
+                        esc(e.deskripsi) +
+                        "</div>"
+                      : "") +
+                    "</div>"
+                  );
+                })
+                .join("")
+            : '<p class="empty">Belum ada event atau pengingat.</p>';
+          return h + "</div></section>";
+        }
+
+        var F = { q: "", bulan: "", status: "" };
+        function filteredRapat() {
+          var q = F.q.toLowerCase();
+          return DB.rapat
+            .filter(function (r) {
+              var ds = dispoOf(r.id);
+              if (q) {
+                var txt = [
+                  r.perihal,
+                  r.no_dispo_kabag,
+                  r.no_surat_undangan,
+                  r.asal_undangan,
+                  r.tempat,
+                  r.pimpinan_rapat,
+                ]
+                  .concat(
+                    ds.map(function (d) {
+                      return pegNama(d.pegawai_id);
+                    }),
+                  )
+                  .join(" ")
+                  .toLowerCase();
+                if (txt.indexOf(q) < 0) return false;
+              }
+              if (F.bulan && r.waktu.slice(0, 7) !== F.bulan) return false;
+              if (
+                F.status === "belum" &&
+                !ds.some(function (d) {
+                  return !d.status;
+                })
+              )
+                return false;
+              if (
+                F.status === "lengkap" &&
+                ds.some(function (d) {
+                  return !d.status;
+                })
+              )
+                return false;
+              if (
+                F.status === "efektif" &&
+                !ds.some(function (d) {
+                  return d.status === "EFEKTIF";
+                })
+              )
+                return false;
+              if (
+                F.status === "tidak" &&
+                !ds.some(function (d) {
+                  return d.status === "TIDAK EFEKTIF";
+                })
+              )
+                return false;
+              return true;
+            })
+            .sort(function (a, b) {
+              return a.waktu < b.waktu ? 1 : -1;
+            });
+        }
+        function rapatRows() {
+          var now = nowStr(),
+            rows = filteredRapat();
+          if (!rows.length)
+            return '<tr><td colspan="11" class="empty">Tidak ada jadwal rapat.</td></tr>';
+          return rows
+            .map(function (r, i) {
+              return (
+                '<tr class="' +
+                (r.waktu < now ? "row-past" : "") +
+                '"><td>' +
+                (i + 1) +
+                '</td><td class="nowrap">' +
+                esc(r.no_dispo_kabag) +
+                '</td><td class="nowrap">' +
+                esc(r.no_surat_undangan) +
+                "</td><td>" +
+                esc(r.asal_undangan) +
+                "</td>" +
+                '<td class="strong"><a href="#/rapat/' +
+                r.id +
+                '">' +
+                esc(r.perihal) +
+                "</a></td><td>" +
+                esc(r.pimpinan_rapat) +
+                "</td><td>" +
+                esc(r.tempat) +
+                '</td><td class="nowrap">' +
+                tgl(r.waktu, false) +
+                '<br><span class="muted">' +
+                jam(r.waktu) +
+                " WIB</span></td>" +
+                "<td>" +
+                dispoOf(r.id)
+                  .map(function (d) {
+                    return (
+                      '<div class="dispo-line"><span>' +
+                      esc(pegNama(d.pegawai_id)) +
+                      "</span>" +
+                      badge(d.status) +
+                      "</div>"
+                    );
+                  })
+                  .join("") +
+                '</td><td class="small">' +
+                esc(r.keterangan || "-") +
+                "</td>" +
+                '<td class="nowrap"><a href="#/rapat/' +
+                r.id +
+                '" class="btn btn-sm btn-ghost" title="Detail">' +
+                icon("eye", 15) +
+                '</a><a href="#/rapat/' +
+                r.id +
+                '/edit" class="btn btn-sm btn-ghost" title="Edit">' +
+                icon("edit", 15) +
+                "</a>" +
+                delBtn(
+                  "del-rapat",
+                  r.id,
+                  "Hapus jadwal rapat ini beserta seluruh laporan & file buktinya?",
+                ) +
+                "</td></tr>"
+              );
+            })
+            .join("");
+        }
+        function viewRapatList() {
+          return (
+            '<div class="toolbar"><div class="filters"><input type="search" data-filter="q" value="' +
+            esc(F.q) +
+            '" placeholder="Cari perihal, no. surat, asal, tempat, pegawai…"><input type="month" data-filter="bulan" value="' +
+            F.bulan +
+            '">' +
+            '<select data-filter="status">' +
+            opt("", "Semua status", F.status) +
+            opt("belum", "Ada yang belum lapor", F.status) +
+            opt("lengkap", "Laporan lengkap", F.status) +
+            opt("efektif", "Ada yang Efektif", F.status) +
+            opt("tidak", "Ada yang Tidak Efektif", F.status) +
+            "</select>" +
+            '<button class="btn btn-link" data-act="reset-filter">Reset</button></div><div class="actions"><button class="btn btn-light" data-act="export-csv">' +
+            icon("download", 16) +
+            ' Ekspor Excel</button><a href="#/rapat/baru" class="btn btn-primary">' +
+            icon("plus", 16) +
+            " Tambah Rapat</a></div></div>" +
+            '<div class="card p0"><div class="table-wrap"><table class="table"><thead><tr><th>No</th><th>No. Dispo Kabag</th><th>No. Surat Undangan</th><th>Asal Undangan</th><th>Perihal (Agenda Rapat)</th><th>Pimpinan Rapat</th><th>Tempat</th><th>Waktu Rapat</th><th>Disposisi &amp; Status Kinerja</th><th>Keterangan</th><th></th></tr></thead><tbody id="rapatBody">' +
+            rapatRows() +
+            "</tbody></table></div></div>" +
+            '<p class="muted small">Baris abu-abu = rapat yang sudah lewat.</p>'
+          );
+        }
+
+        function viewRapatForm(id, q) {
+          var r = id
+            ? byId(DB.rapat, id)
+            : { waktu: q && q.tanggal ? q.tanggal + "T" : "" };
+          if (id && !r) throw 404;
+          var sel = id
+            ? dispoOf(id).map(function (d) {
+                return d.pegawai_id;
+              })
+            : [];
+          var reported = id
+            ? dispoOf(id)
+                .filter(function (d) {
+                  return d.status;
+                })
+                .map(function (d) {
+                  return d.pegawai_id;
+                })
+            : [];
+          function inp(n, l, req, span) {
+            return (
+              '<label class="field' +
+              (span ? " span-2" : "") +
+              '"><span>' +
+              l +
+              (req ? ' <b class="req">*</b>' : "") +
+              '</span><input name="' +
+              n +
+              '" value="' +
+              esc(r[n] || "") +
+              '"' +
+              (req ? " required" : "") +
+              "></label>"
+            );
+          }
+          var peg = DB.pegawai
+            .filter(function (p) {
+              return p.aktif || sel.indexOf(p.id) > -1;
+            })
+            .sort(function (a, b) {
+              return a.nama.localeCompare(b.nama);
+            });
+          return (
+            '<form class="card form-card" data-form="rapat" data-id="' +
+            (id || "") +
+            '"><div class="form-section">Informasi Surat</div><div class="form-grid">' +
+            inp("no_dispo_kabag", "No. Dispo Kabag", 1) +
+            inp("no_surat_undangan", "No. Surat Undangan", 1) +
+            inp("asal_undangan", "Asal Undangan", 1, 1) +
+            "</div>" +
+            '<div class="form-section">Detail Rapat</div><div class="form-grid"><label class="field span-2"><span>Perihal (Agenda Rapat) <b class="req">*</b></span><textarea name="perihal" rows="2" required>' +
+            esc(r.perihal || "") +
+            "</textarea></label>" +
+            inp("pimpinan_rapat", "Pimpinan Rapat", 1) +
+            inp("tempat", "Tempat", 1) +
+            '<label class="field"><span>Tanggal Rapat <b class="req">*</b></span><input type="date" name="tanggal" value="' +
+            (r.waktu || "").slice(0, 10) +
+            '" required></label>' +
+            '<label class="field"><span>Jam Rapat <b class="req">*</b></span><input type="time" name="jam" value="' +
+            (r.waktu || "").slice(11, 16) +
+            '" required></label></div>' +
+            '<div class="form-section">Disposisi <span class="muted small">(pegawai yang ditugaskan) <b class="req">*</b></span></div><div class="dispo-picker"><div class="dp-tools"><input type="search" id="dpSearch" placeholder="Cari nama / jabatan pegawai…"><span class="muted small" id="dpCount"></span></div><div class="dp-list" id="dpList">' +
+            (peg.length
+              ? peg
+                  .map(function (p) {
+                    return (
+                      '<label class="dp-item" data-text="' +
+                      esc(
+                        (
+                          p.nama +
+                          " " +
+                          (p.jabatan || "") +
+                          " " +
+                          (p.unit || "")
+                        ).toLowerCase(),
+                      ) +
+                      '"><input type="checkbox" name="disposisi" value="' +
+                      p.id +
+                      '"' +
+                      (sel.indexOf(p.id) > -1 ? " checked" : "") +
+                      '><div><div class="strong">' +
+                      esc(p.nama) +
+                      '</div><div class="small muted">' +
+                      esc(p.jabatan || "-") +
+                      (p.unit ? " · " + esc(p.unit) : "") +
+                      "</div></div>" +
+                      (reported.indexOf(p.id) > -1
+                        ? '<span class="badge b-blue">sudah lapor</span>'
+                        : "") +
+                      "</label>"
+                    );
+                  })
+                  .join("")
+              : '<p class="empty">Belum ada data pegawai.</p>') +
+            "</div>" +
+            (id
+              ? '<p class="small muted">⚠️ Menghapus centang pegawai yang sudah melapor akan menghapus laporan &amp; file bukti miliknya.</p>'
+              : "") +
+            "</div>" +
+            '<div class="form-section">Lainnya</div><label class="field"><span>Keterangan <em class="muted">(opsional)</em></span><textarea name="keterangan" rows="2">' +
+            esc(r.keterangan || "") +
+            "</textarea></label>" +
+            '<p class="small muted">Status kinerja (Efektif / Tidak Efektif), file bukti, dan catatan diisi oleh pegawai yang didisposisi melalui menu <b>Tugas Saya</b>.</p>' +
+            '<div class="form-actions"><a href="' +
+            (id ? "#/rapat/" + id : "#/rapat") +
+            '" class="btn btn-light">Batal</a><button class="btn btn-primary">Simpan Jadwal</button></div></form>'
+          );
+        }
+
+        function viewRapatDetail(id) {
+          var r = byId(DB.rapat, id);
+          if (!r) throw 404;
+          var ds = dispoOf(id);
+          if (!isAdmin()) {
+            ds = ds.filter(function (d) {
+              return d.pegawai_id === myPid();
+            });
+            if (!ds.length) throw 403;
+          }
+          var h =
+            '<div class="toolbar"><a href="' +
+            (isAdmin() ? "#/rapat" : "#/tugas") +
+            '" class="btn btn-link">' +
+            icon("chev-l", 16) +
+            " Kembali</a>";
+          if (isAdmin())
+            h +=
+              '<div class="actions"><a href="#/rapat/' +
+              id +
+              '/edit" class="btn btn-light">' +
+              icon("edit", 16) +
+              ' Edit</a><button class="btn btn-danger" data-act="del-rapat" data-id="' +
+              id +
+              '" data-msg="Hapus jadwal rapat ini beserta seluruh laporannya?">' +
+              icon("trash", 16) +
+              " Hapus</button></div>";
+          h +=
+            '</div><div class="card"><div class="detail-head"><div><div class="muted small">' +
+            esc(r.asal_undangan) +
+            "</div><h2>" +
+            esc(r.perihal) +
+            '</h2><div class="li-meta">' +
+            icon("clock", 14) +
+            " " +
+            tgl(r.waktu) +
+            ", " +
+            jam(r.waktu) +
+            " WIB · " +
+            icon("pin", 14) +
+            " " +
+            esc(r.tempat) +
+            '</div></div><span class="chip big">' +
+            relatif(r.waktu) +
+            "</span></div>" +
+            '<dl class="dl"><div><dt>No. Dispo Kabag</dt><dd>' +
+            esc(r.no_dispo_kabag || "-") +
+            "</dd></div><div><dt>No. Surat Undangan</dt><dd>" +
+            esc(r.no_surat_undangan || "-") +
+            "</dd></div><div><dt>Asal Undangan</dt><dd>" +
+            esc(r.asal_undangan || "-") +
+            "</dd></div>" +
+            "<div><dt>Pimpinan Rapat</dt><dd>" +
+            esc(r.pimpinan_rapat || "-") +
+            "</dd></div><div><dt>Tempat</dt><dd>" +
+            esc(r.tempat || "-") +
+            "</dd></div><div><dt>Waktu Rapat</dt><dd>" +
+            tgl(r.waktu) +
+            " · " +
+            jam(r.waktu) +
+            ' WIB</dd></div><div class="span-2"><dt>Keterangan</dt><dd>' +
+            esc(r.keterangan || "-") +
+            "</dd></div></dl></div>" +
+            '<div class="card p0"><div class="card-head pad"><h3>Disposisi &amp; Status Kinerja</h3></div><div class="table-wrap"><table class="table"><thead><tr><th>Pegawai</th><th>Status Kinerja</th><th>File Bukti</th><th>Catatan</th><th>Dilaporkan</th><th></th></tr></thead><tbody>' +
+            ds
+              .map(function (d) {
+                var p = byId(DB.pegawai, d.pegawai_id) || {};
+                return (
+                  '<tr><td><div class="strong">' +
+                  esc(p.nama) +
+                  '</div><div class="small muted">' +
+                  esc(p.jabatan || "") +
+                  "</div></td><td>" +
+                  badge(d.status) +
+                  "</td><td>" +
+                  fileCell(d) +
+                  '</td><td class="small">' +
+                  esc(d.catatan || "-") +
+                  '</td><td class="small nowrap">' +
+                  (d.dilaporkan_at ? tgljam(d.dilaporkan_at) : "-") +
+                  "</td>" +
+                  '<td class="nowrap"><a class="btn btn-sm ' +
+                  (d.status ? "btn-light" : "btn-primary") +
+                  '" href="#/lapor/' +
+                  d.id +
+                  '">' +
+                  icon("send", 14) +
+                  " " +
+                  (d.status ? "Ubah" : "Lapor") +
+                  "</a></td></tr>"
+                );
+              })
+              .join("") +
+            "</tbody></table></div></div>";
+          return h;
+        }
+
+        function viewTugas(tab) {
+          var pid = myPid(),
+            h = "";
+          if (!pid)
+            h +=
+              '<div class="alert alert-error">Akun Anda belum terhubung dengan data pegawai. Hubungi admin.</div>';
+          h +=
+            '<div class="tabs">' +
+            [
+              ["semua", "Semua"],
+              ["belum", "Belum Lapor"],
+              ["efektif", "Efektif"],
+              ["tidak", "Tidak Efektif"],
+            ]
+              .map(function (t) {
+                return (
+                  '<a href="#/tugas?tab=' +
+                  t[0] +
+                  '" class="tab ' +
+                  (tab === t[0] ? "active" : "") +
+                  '">' +
+                  t[1] +
+                  "</a>"
+                );
+              })
+              .join("") +
+            "</div>";
+          var rows = DB.dispo
+            .filter(function (d) {
+              if (d.pegawai_id !== pid) return false;
+              if (tab === "belum") return !d.status;
+              if (tab === "efektif") return d.status === "EFEKTIF";
+              if (tab === "tidak") return d.status === "TIDAK EFEKTIF";
+              return true;
+            })
+            .sort(function (a, b) {
+              return byId(DB.rapat, a.rapat_id).waktu <
+                byId(DB.rapat, b.rapat_id).waktu
+                ? 1
+                : -1;
+            });
+          h +=
+            '<div class="task-list">' +
+            (rows.length
+              ? rows
+                  .map(function (d) {
+                    var r = byId(DB.rapat, d.rapat_id);
+                    return (
+                      '<div class="card task task-' +
+                      (!d.status
+                        ? "belum"
+                        : d.status === "EFEKTIF"
+                          ? "ef"
+                          : "tef") +
+                      '"><div class="task-main"><div class="task-top">' +
+                      badge(d.status) +
+                      '<span class="chip">' +
+                      relatif(r.waktu) +
+                      "</span></div>" +
+                      '<h3><a href="#/rapat/' +
+                      r.id +
+                      '">' +
+                      esc(r.perihal) +
+                      '</a></h3><div class="li-meta">' +
+                      icon("clock", 13) +
+                      " " +
+                      tgl(r.waktu) +
+                      ", " +
+                      jam(r.waktu) +
+                      " WIB &nbsp;·&nbsp; " +
+                      icon("pin", 13) +
+                      " " +
+                      esc(r.tempat) +
+                      "</div>" +
+                      '<div class="task-info"><span><b>Asal:</b> ' +
+                      esc(r.asal_undangan) +
+                      "</span><span><b>Pimpinan:</b> " +
+                      esc(r.pimpinan_rapat) +
+                      "</span><span><b>No. Dispo:</b> " +
+                      esc(r.no_dispo_kabag) +
+                      "</span><span><b>No. Surat:</b> " +
+                      esc(r.no_surat_undangan) +
+                      "</span></div>" +
+                      (r.keterangan
+                        ? '<div class="small muted">Keterangan: ' +
+                          esc(r.keterangan) +
+                          "</div>"
+                        : "") +
+                      (d.status
+                        ? '<div class="task-report"><div><b>File:</b> ' +
+                          fileCell(d) +
+                          "</div><div><b>Catatan:</b> " +
+                          esc(d.catatan || "-") +
+                          '</div><div class="small muted">Dilaporkan ' +
+                          tgljam(d.dilaporkan_at) +
+                          "</div></div>"
+                        : "") +
+                      '</div><div class="task-act"><a href="#/lapor/' +
+                      d.id +
+                      '" class="btn ' +
+                      (d.status ? "btn-light" : "btn-primary") +
+                      '">' +
+                      icon("send", 15) +
+                      " " +
+                      (d.status ? "Ubah Laporan" : "Laporkan Kinerja") +
+                      "</a></div></div>"
+                    );
+                  })
+                  .join("")
+              : '<div class="card empty-state"><p>Tidak ada tugas pada kategori ini.</p></div>') +
+            "</div>";
+          return h;
+        }
+
+        var pendingFile = null;
+        function viewLapor(did) {
+          var d = byId(DB.dispo, did);
+          if (!d) throw 404;
+          if (!canDispo(d)) throw 403;
+          var r = byId(DB.rapat, d.rapat_id),
+            p = byId(DB.pegawai, d.pegawai_id) || {};
+          pendingFile = null;
+          return (
+            '<a href="' +
+            (isAdmin() && d.pegawai_id !== myPid()
+              ? "#/rapat/" + r.id
+              : "#/tugas") +
+            '" class="btn btn-link">' +
+            icon("chev-l", 16) +
+            " Kembali</a>" +
+            '<div class="grid-2 lapor-grid"><div class="card"><div class="muted small">Rapat yang ditugaskan</div><h3 class="mt4">' +
+            esc(r.perihal) +
+            '</h3><dl class="dl one">' +
+            "<div><dt>Pegawai</dt><dd>" +
+            esc(p.nama) +
+            ' <span class="muted">(' +
+            esc(p.jabatan || "-") +
+            ")</span></dd></div><div><dt>Waktu</dt><dd>" +
+            tgl(r.waktu) +
+            ", " +
+            jam(r.waktu) +
+            " WIB</dd></div><div><dt>Tempat</dt><dd>" +
+            esc(r.tempat) +
+            "</dd></div>" +
+            "<div><dt>Pimpinan Rapat</dt><dd>" +
+            esc(r.pimpinan_rapat) +
+            "</dd></div><div><dt>Asal Undangan</dt><dd>" +
+            esc(r.asal_undangan) +
+            "</dd></div><div><dt>No. Dispo / Surat</dt><dd>" +
+            esc(r.no_dispo_kabag) +
+            " / " +
+            esc(r.no_surat_undangan) +
+            "</dd></div>" +
+            (r.keterangan
+              ? "<div><dt>Keterangan</dt><dd>" +
+                esc(r.keterangan) +
+                "</dd></div>"
+              : "") +
+            "</dl></div>" +
+            '<form class="card form-card" data-form="lapor" data-id="' +
+            d.id +
+            '" id="laporForm"><div class="field"><span>Status Kinerja <b class="req">*</b></span><div class="status-choice">' +
+            '<label class="sc sc-ef"><input type="radio" name="status" value="EFEKTIF"' +
+            (d.status === "EFEKTIF" ? " checked" : "") +
+            "><div><b>EFEKTIF</b><small>Wajib melampirkan file bukti</small></div></label>" +
+            '<label class="sc sc-tef"><input type="radio" name="status" value="TIDAK EFEKTIF"' +
+            (d.status === "TIDAK EFEKTIF" ? " checked" : "") +
+            "><div><b>TIDAK EFEKTIF</b><small>File otomatis kosong</small></div></label></div></div>" +
+            '<div class="field"><span>File Bukti <b class="req" id="fileReq">*</b></span><div id="fileActive">' +
+            (d.file
+              ? '<div class="current-file">' +
+                icon("file", 15) +
+                ' File saat ini: <a href="javascript:void 0" data-act="view-file" data-id="' +
+                d.id +
+                '">' +
+                esc(d.file.name) +
+                '</a> <span class="small muted">(unggah file baru untuk mengganti)</span></div>'
+              : "") +
+            '<label class="dropzone" id="dropzone"><input type="file" id="bukti" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx"><div>' +
+            icon("download", 22) +
+            '</div><div id="dzText"><b>Klik untuk memilih file</b> atau seret ke sini</div><div class="small muted">Format: pdf, png, jpg, jpeg, doc(x), xls(x), ppt(x) · maks 10 MB</div></label></div>' +
+            '<div id="fileEmpty" class="file-empty" hidden>— File kosong (otomatis karena status TIDAK EFEKTIF) —</div></div>' +
+            '<label class="field"><span>Catatan</span><textarea name="catatan" rows="4" placeholder="Tuliskan catatan / hasil rapat / alasan tidak efektif…">' +
+            esc(d.catatan || "") +
+            "</textarea></label>" +
+            '<div id="laporErr"></div><div class="form-actions"><a href="#/tugas" class="btn btn-light">Batal</a><button class="btn btn-primary">' +
+            icon("send", 15) +
+            " Simpan Laporan</button></div></form></div>"
+          );
+        }
+
+        var KAL = null;
+        function viewKalender(q) {
+          var t = new Date(),
+            y = +q.y || t.getFullYear(),
+            m = +q.m || t.getMonth() + 1;
+          var first = new Date(y, m - 1, 1),
+            off = (first.getDay() + 6) % 7,
+            start = new Date(y, m - 1, 1 - off);
+          var last = new Date(y, m, 0),
+            endOff = 6 - ((last.getDay() + 6) % 7),
+            end = new Date(y, m - 1, last.getDate() + endOff);
+          var sK = dateKey(start),
+            eK = dateKey(end),
+            items = {},
+            pid = myPid();
+          function add(k, it) {
+            (items[k] = items[k] || []).push(it);
+          }
+          DB.rapat.forEach(function (r) {
+            var k = r.waktu.slice(0, 10);
+            if (k < sK || k > eK) return;
+            var ds = dispoOf(r.id),
+              cls;
+            if (isAdmin())
+              cls =
+                ds.length &&
+                !ds.some(function (d) {
+                  return !d.status;
+                })
+                  ? "rapat-done"
+                  : "rapat";
+            else {
+              var mine = ds.filter(function (d) {
+                return d.pegawai_id === pid;
+              })[0];
+              if (!mine) return;
+              cls =
+                { EFEKTIF: "rapat-done", "TIDAK EFEKTIF": "rapat-no" }[
+                  mine.status
+                ] || "rapat";
+            }
+            add(k, {
+              cls: cls,
+              jam: jam(r.waktu),
+              judul: r.perihal,
+              url: "#/rapat/" + r.id,
+              info: r.tempat,
+              t: r.waktu,
+            });
+          });
+          visibleEvents().forEach(function (e) {
+            var d0 = parse(e.mulai.slice(0, 10)),
+              d1 = parse((e.selesai || e.mulai).slice(0, 10));
+            for (var d = new Date(d0); d <= d1; d.setDate(d.getDate() + 1)) {
+              var k = dateKey(d);
+              if (k < sK || k > eK) continue;
+              add(k, {
+                cls: e.jenis,
+                jam:
+                  k === e.mulai.slice(0, 10) &&
+                  e.mulai.slice(11, 16) !== "00:00"
+                    ? jam(e.mulai)
+                    : "",
+                judul: e.judul,
+                url: "#/event",
+                info: e.deskripsi || "",
+                t: e.mulai,
+              });
+            }
+          });
+          var pm = m === 1 ? [y - 1, 12] : [y, m - 1],
+            nm = m === 12 ? [y + 1, 1] : [y, m + 1],
+            todayK = dateKey(t);
+          var h =
+            '<div class="toolbar"><div class="cal-nav"><a class="icon-btn" href="#/kalender?y=' +
+            pm[0] +
+            "&m=" +
+            pm[1] +
+            '">' +
+            icon("chev-l") +
+            "</a><h2>" +
+            BULAN[m] +
+            " " +
+            y +
+            '</h2><a class="icon-btn" href="#/kalender?y=' +
+            nm[0] +
+            "&m=" +
+            nm[1] +
+            '">' +
+            icon("chev-r") +
+            '</a><a class="btn btn-sm btn-light" href="#/kalender">Hari ini</a></div>' +
+            '<div class="legend"><span><i class="dot rapat"></i>Rapat ' +
+            (isAdmin() ? "(belum lengkap)" : "(belum lapor)") +
+            '</span><span><i class="dot rapat-done"></i>' +
+            (isAdmin() ? "Laporan lengkap" : "Efektif") +
+            "</span>" +
+            (isAdmin()
+              ? ""
+              : '<span><i class="dot rapat-no"></i>Tidak efektif</span>') +
+            '<span><i class="dot event"></i>Event</span><span><i class="dot reminder"></i>Reminder</span></div></div>' +
+            '<div class="card p0 cal"><div class="cal-head">' +
+            ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"]
+              .map(function (x) {
+                return "<div>" + x + "</div>";
+              })
+              .join("") +
+            "</div>";
+          var d = new Date(start);
+          while (d <= end) {
+            h += '<div class="cal-row">';
+            for (var i = 0; i < 7; i++) {
+              var k = dateKey(d),
+                its = (items[k] || []).sort(function (a, b) {
+                  return a.t < b.t ? -1 : 1;
+                });
+              h +=
+                '<div class="cal-cell ' +
+                (d.getMonth() + 1 !== m ? "other " : "") +
+                (k === todayK ? "today " : "") +
+                (i >= 5 ? "weekend" : "") +
+                '"><div class="cal-day"><span>' +
+                d.getDate() +
+                "</span>" +
+                (isAdmin()
+                  ? '<a href="#/rapat/baru?tanggal=' +
+                    k +
+                    '" class="cal-add" title="Tambah rapat">+</a>'
+                  : "") +
+                "</div>" +
+                its
+                  .map(function (it) {
+                    return (
+                      '<a href="' +
+                      it.url +
+                      '" class="cal-item ' +
+                      it.cls +
+                      '" title="' +
+                      esc(it.judul + (it.info ? " — " + it.info : "")) +
+                      '">' +
+                      (it.jam ? "<b>" + it.jam + "</b> " : "") +
+                      esc(it.judul) +
+                      "</a>"
+                    );
+                  })
+                  .join("") +
+                "</div>";
+              d.setDate(d.getDate() + 1);
+            }
+            h += "</div>";
+          }
+          return h + "</div>";
+        }
+
+        function ingatLabel(m) {
+          return m >= 1440
+            ? m / 1440 + " hari"
+            : m >= 60
+              ? m / 60 + " jam"
+              : m + " menit";
+        }
+        function viewEventList(tab) {
+          var today = dateKey(new Date());
+          var rows = visibleEvents()
+            .filter(function (e) {
+              var k = (e.selesai || e.mulai).slice(0, 10);
+              return tab === "lewat" ? k < today : k >= today;
+            })
+            .sort(function (a, b) {
+              return (a.mulai < b.mulai ? -1 : 1) * (tab === "lewat" ? -1 : 1);
+            });
+          var h =
+            '<div class="toolbar"><div class="tabs m0"><a href="#/event?tab=mendatang" class="tab ' +
+            (tab !== "lewat" ? "active" : "") +
+            '">Mendatang</a><a href="#/event?tab=lewat" class="tab ' +
+            (tab === "lewat" ? "active" : "") +
+            '">Sudah lewat</a></div>';
+          if (isAdmin())
+            h +=
+              '<div class="actions"><a href="#/event/baru?jenis=reminder" class="btn btn-light">' +
+              icon("bell", 16) +
+              ' Reminder</a><a href="#/event/baru" class="btn btn-primary">' +
+              icon("plus", 16) +
+              " Event</a></div>";
+          h +=
+            '</div><div class="card p0">' +
+            (rows.length
+              ? rows
+                  .map(function (e) {
+                    return (
+                      '<div class="ev-row">' +
+                      dateBox(e.mulai, e.jenis === "reminder" ? "rem" : "evt") +
+                      '<div class="li-body"><div class="li-title">' +
+                      esc(e.judul) +
+                      ' <span class="badge ' +
+                      (e.jenis === "reminder" ? "b-purple" : "b-teal") +
+                      '">' +
+                      (e.jenis === "reminder" ? "Reminder" : "Event") +
+                      "</span></div>" +
+                      '<div class="li-meta">' +
+                      icon("clock", 13) +
+                      " " +
+                      tgl(e.mulai) +
+                      (e.mulai.slice(11, 16) !== "00:00"
+                        ? ", " + jam(e.mulai)
+                        : "") +
+                      (e.selesai ? " s.d. " + tgljam(e.selesai) : "") +
+                      " · " +
+                      (e.untuk_pegawai_id
+                        ? "Untuk: " + esc(pegNama(e.untuk_pegawai_id))
+                        : "Untuk semua pegawai") +
+                      (e.ingatkan_menit
+                        ? " · 🔔 diingatkan " +
+                          ingatLabel(e.ingatkan_menit) +
+                          " sebelumnya"
+                        : "") +
+                      "</div>" +
+                      (e.deskripsi
+                        ? '<div class="small">' + esc(e.deskripsi) + "</div>"
+                        : "") +
+                      "</div>" +
+                      (isAdmin()
+                        ? '<div class="nowrap"><a href="#/event/' +
+                          e.id +
+                          '/edit" class="btn btn-sm btn-ghost">' +
+                          icon("edit", 15) +
+                          "</a>" +
+                          delBtn("del-event", e.id) +
+                          "</div>"
+                        : "") +
+                      "</div>"
+                    );
+                  })
+                  .join("")
+              : '<p class="empty">Tidak ada data.</p>') +
+            "</div>";
+          return h;
+        }
+
+        function viewEventForm(id, q) {
+          var e = id
+            ? byId(DB.events, id)
+            : {
+                jenis: (q && q.jenis) || "event",
+                ingatkan_menit: 60,
+                mulai: "",
+                selesai: "",
+              };
+          if (id && !e) throw 404;
+          return (
+            '<form class="card form-card narrow" data-form="event" data-id="' +
+            (id || "") +
+            '"><div class="field"><span>Jenis</span><div class="seg"><label><input type="radio" name="jenis" value="event"' +
+            (e.jenis !== "reminder" ? " checked" : "") +
+            '><span>Event</span></label><label><input type="radio" name="jenis" value="reminder"' +
+            (e.jenis === "reminder" ? " checked" : "") +
+            "><span>Reminder</span></label></div></div>" +
+            '<label class="field"><span>Judul <b class="req">*</b></span><input name="judul" value="' +
+            esc(e.judul || "") +
+            '" required></label><div class="form-grid">' +
+            '<label class="field"><span>Tanggal mulai <b class="req">*</b></span><input type="date" name="tanggal" value="' +
+            e.mulai.slice(0, 10) +
+            '" required></label><label class="field"><span>Jam mulai</span><input type="time" name="jam" value="' +
+            e.mulai.slice(11, 16) +
+            '"></label>' +
+            '<label class="field"><span>Tanggal selesai <em class="muted">(opsional)</em></span><input type="date" name="tanggal_selesai" value="' +
+            (e.selesai || "").slice(0, 10) +
+            '"></label><label class="field"><span>Jam selesai</span><input type="time" name="jam_selesai" value="' +
+            (e.selesai || "").slice(11, 16) +
+            '"></label></div>' +
+            '<div class="form-grid"><label class="field"><span>Ingatkan</span><select name="ingatkan_menit">' +
+            [
+              [0, "Tanpa pengingat"],
+              [15, "15 menit sebelum"],
+              [30, "30 menit sebelum"],
+              [60, "1 jam sebelum"],
+              [120, "2 jam sebelum"],
+              [1440, "1 hari sebelum"],
+              [4320, "3 hari sebelum"],
+            ]
+              .map(function (o) {
+                return opt(o[0], o[1], e.ingatkan_menit);
+              })
+              .join("") +
+            "</select></label>" +
+            '<label class="field"><span>Ditujukan untuk</span><select name="untuk_pegawai_id">' +
+            opt("", "Semua pegawai", e.untuk_pegawai_id || "") +
+            DB.pegawai
+              .filter(function (p) {
+                return p.aktif;
+              })
+              .map(function (p) {
+                return opt(p.id, p.nama, e.untuk_pegawai_id);
+              })
+              .join("") +
+            "</select></label></div>" +
+            '<label class="field"><span>Deskripsi</span><textarea name="deskripsi" rows="3">' +
+            esc(e.deskripsi || "") +
+            '</textarea></label><div class="form-actions"><a href="#/event" class="btn btn-light">Batal</a><button class="btn btn-primary">Simpan</button></div></form>'
+          );
+        }
+
+        function viewPegawaiList(q) {
+          var ql = q.toLowerCase();
+          var rows = DB.pegawai
+            .filter(function (p) {
+              return (
+                !ql ||
+                [p.nama, p.nip, p.jabatan, p.unit]
+                  .join(" ")
+                  .toLowerCase()
+                  .indexOf(ql) > -1
+              );
+            })
+            .sort(function (a, b) {
+              return b.aktif - a.aktif || a.nama.localeCompare(b.nama);
+            });
+          return (
+            '<div class="toolbar"><form class="filters" data-form="cari-pegawai"><input type="search" name="q" value="' +
+            esc(q) +
+            '" placeholder="Cari nama, NIP, jabatan, unit…"><button class="btn btn-light">Cari</button></form><a href="#/pegawai/baru" class="btn btn-primary">' +
+            icon("plus", 16) +
+            " Tambah Pegawai</a></div>" +
+            '<div class="card p0"><div class="table-wrap"><table class="table"><thead><tr><th>No</th><th>Nama</th><th>NIP</th><th>Jabatan</th><th>Unit / Bidang</th><th>Kontak</th><th>Akun Login</th><th>Tugas</th><th>Status</th><th></th></tr></thead><tbody>' +
+            (rows.length
+              ? rows
+                  .map(function (p, i) {
+                    var u = DB.users.filter(function (x) {
+                        return x.pegawai_id === p.id;
+                      })[0],
+                      n = DB.dispo.filter(function (d) {
+                        return d.pegawai_id === p.id;
+                      }).length;
+                    return (
+                      '<tr class="' +
+                      (p.aktif ? "" : "row-past") +
+                      '"><td>' +
+                      (i + 1) +
+                      '</td><td class="strong">' +
+                      esc(p.nama) +
+                      '</td><td class="nowrap">' +
+                      esc(p.nip || "-") +
+                      "</td><td>" +
+                      esc(p.jabatan || "-") +
+                      "</td><td>" +
+                      esc(p.unit || "-") +
+                      '</td><td class="small">' +
+                      esc(p.no_hp || "") +
+                      (p.email ? "<br>" + esc(p.email) : "") +
+                      "</td>" +
+                      "<td>" +
+                      (u
+                        ? '<a href="#/pengguna/' +
+                          u.id +
+                          '/edit" class="chip">@' +
+                          esc(u.username) +
+                          "</a>"
+                        : '<a href="#/pengguna/baru?pegawai_id=' +
+                          p.id +
+                          '" class="btn btn-sm btn-light">' +
+                          icon("plus", 13) +
+                          " Buat akun</a>") +
+                      "</td><td>" +
+                      n +
+                      "</td>" +
+                      "<td>" +
+                      (p.aktif
+                        ? '<span class="badge b-green">Aktif</span>'
+                        : '<span class="badge b-gray">Nonaktif</span>') +
+                      '</td><td class="nowrap"><a href="#/pegawai/' +
+                      p.id +
+                      '/edit" class="btn btn-sm btn-ghost">' +
+                      icon("edit", 15) +
+                      "</a>" +
+                      delBtn("del-pegawai", p.id, "Hapus data pegawai ini?") +
+                      "</td></tr>"
+                    );
+                  })
+                  .join("")
+              : '<tr><td colspan="10" class="empty">Belum ada data pegawai.</td></tr>') +
+            "</tbody></table></div></div>"
+          );
+        }
+
+        function viewPegawaiForm(id) {
+          var p = id ? byId(DB.pegawai, id) : { aktif: true };
+          if (id && !p) throw 404;
+          function inp(n, l, req, span, type) {
+            return (
+              '<label class="field' +
+              (span ? " span-2" : "") +
+              '"><span>' +
+              l +
+              (req ? ' <b class="req">*</b>' : "") +
+              '</span><input name="' +
+              n +
+              '" type="' +
+              (type || "text") +
+              '" value="' +
+              esc(p[n] || "") +
+              '"' +
+              (req ? " required" : "") +
+              "></label>"
+            );
+          }
+          return (
+            '<form class="card form-card narrow" data-form="pegawai" data-id="' +
+            (id || "") +
+            '"><div class="form-grid">' +
+            inp("nama", "Nama lengkap", 1, 1) +
+            inp("nip", "NIP") +
+            inp("jabatan", "Jabatan") +
+            inp("unit", "Unit / Bidang") +
+            inp("no_hp", "No. HP") +
+            inp("email", "Email", 0, 1, "email") +
+            "</div>" +
+            '<label class="check"><input type="checkbox" name="aktif"' +
+            (p.aktif ? " checked" : "") +
+            '> Pegawai aktif <span class="muted small">(pegawai nonaktif tidak muncul di pilihan disposisi)</span></label>' +
+            (id
+              ? ""
+              : '<label class="check"><input type="checkbox" name="buat_akun" checked> Lanjut buatkan akun login untuk pegawai ini</label>') +
+            '<div class="form-actions"><a href="#/pegawai" class="btn btn-light">Batal</a><button class="btn btn-primary">Simpan</button></div></form>'
+          );
+        }
+
+        function viewPenggunaList() {
+          var rows = DB.users.slice().sort(function (a, b) {
+            return (
+              a.role.localeCompare(b.role) ||
+              a.username.localeCompare(b.username)
+            );
+          });
+          return (
+            '<div class="toolbar"><p class="muted m0">Kelola akun login. <b>Admin</b> = akses penuh pengaturan sistem. <b>User</b> = hanya melihat &amp; melaporkan tugas miliknya.</p><a href="#/pengguna/baru" class="btn btn-primary">' +
+            icon("plus", 16) +
+            " Tambah Akun</a></div>" +
+            '<div class="role-info"><div class="card role-card"><span class="badge b-blue">ADMIN</span><ul><li>Kelola jadwal rapat &amp; disposisi</li><li>Kelola data pegawai &amp; akun</li><li>Kelola event, reminder &amp; pengaturan</li><li>Rekap kinerja &amp; ekspor Excel</li></ul></div>' +
+            '<div class="card role-card"><span class="badge b-gray">USER</span><ul><li>Melihat tugas (disposisi) miliknya</li><li>Melapor status kinerja + file bukti + catatan</li><li>Melihat kalender &amp; pengingat</li><li>Tidak bisa menambah / mengubah data sistem</li></ul></div></div>' +
+            '<div class="card p0"><div class="table-wrap"><table class="table"><thead><tr><th>Username</th><th>Peran</th><th>Terhubung ke Pegawai</th><th>Login terakhir</th><th>Status</th><th></th></tr></thead><tbody>' +
+            rows
+              .map(function (u) {
+                var p = byId(DB.pegawai, u.pegawai_id);
+                return (
+                  '<tr class="' +
+                  (u.aktif ? "" : "row-past") +
+                  '"><td class="strong">@' +
+                  esc(u.username) +
+                  (u.id === me().id
+                    ? ' <span class="muted small">(Anda)</span>'
+                    : "") +
+                  "</td><td>" +
+                  (u.role === "admin"
+                    ? '<span class="badge b-blue">ADMIN</span>'
+                    : '<span class="badge b-gray">USER</span>') +
+                  "</td>" +
+                  "<td>" +
+                  (p
+                    ? esc(p.nama) +
+                      '<div class="small muted">' +
+                      esc(p.jabatan || "") +
+                      "</div>"
+                    : "-") +
+                  '</td><td class="small">' +
+                  (u.last_login ? tgljam(u.last_login) : "Belum pernah") +
+                  "</td><td>" +
+                  (u.aktif
+                    ? '<span class="badge b-green">Aktif</span>'
+                    : '<span class="badge b-gray">Nonaktif</span>') +
+                  "</td>" +
+                  '<td class="nowrap"><a href="#/pengguna/' +
+                  u.id +
+                  '/edit" class="btn btn-sm btn-ghost" title="Edit / reset password">' +
+                  icon("edit", 15) +
+                  "</a>" +
+                  (u.id !== me().id
+                    ? delBtn(
+                        "del-user",
+                        u.id,
+                        "Hapus akun @" + u.username + "?",
+                      )
+                    : "") +
+                  "</td></tr>"
+                );
+              })
+              .join("") +
+            "</tbody></table></div></div>"
+          );
+        }
+
+        function viewPenggunaForm(id, q) {
+          var u = id
+            ? byId(DB.users, id)
+            : {
+                role: "user",
+                aktif: true,
+                pegawai_id: q && q.pegawai_id ? +q.pegawai_id : null,
+              };
+          if (id && !u) throw 404;
+          var peg = DB.pegawai.filter(function (p) {
+            return (
+              p.aktif &&
+              (p.id === u.pegawai_id ||
+                !DB.users.some(function (x) {
+                  return x.pegawai_id === p.id;
+                }))
+            );
+          });
+          return (
+            '<form class="card form-card narrow" data-form="pengguna" data-id="' +
+            (id || "") +
+            '"><label class="field"><span>Username <b class="req">*</b></span><input name="username" value="' +
+            esc(u.username || "") +
+            '" required autocomplete="off"></label>' +
+            '<label class="field"><span>' +
+            (id
+              ? "Password baru (kosongkan jika tidak diubah)"
+              : 'Password <b class="req">*</b>') +
+            '</span><input type="password" name="password" minlength="6"' +
+            (id ? "" : " required") +
+            ' autocomplete="new-password"></label>' +
+            '<div class="field"><span>Peran / Hak akses</span><div class="seg"><label><input type="radio" name="role" value="user"' +
+            (u.role !== "admin" ? " checked" : "") +
+            '><span>User</span></label><label><input type="radio" name="role" value="admin"' +
+            (u.role === "admin" ? " checked" : "") +
+            "><span>Admin</span></label></div></div>" +
+            '<label class="field"><span>Hubungkan ke data pegawai <em class="muted">(wajib untuk User)</em></span><select name="pegawai_id">' +
+            opt("", "— Tidak dihubungkan —", u.pegawai_id || "") +
+            peg
+              .map(function (p) {
+                return opt(
+                  p.id,
+                  p.nama + (p.jabatan ? " — " + p.jabatan : ""),
+                  u.pegawai_id,
+                );
+              })
+              .join("") +
+            '</select><small class="muted">Hanya pegawai aktif yang belum punya akun yang ditampilkan.</small></label>' +
+            '<label class="check"><input type="checkbox" name="aktif"' +
+            (u.aktif ? " checked" : "") +
+            '> Akun aktif (dapat login)</label><div class="form-actions"><a href="#/pengguna" class="btn btn-light">Batal</a><button class="btn btn-primary">Simpan</button></div></form>'
+          );
+        }
+
+        function rekapData(bulan) {
+          var rids = DB.rapat
+            .filter(function (r) {
+              return !bulan || r.waktu.slice(0, 7) === bulan;
+            })
+            .map(function (r) {
+              return r.id;
+            });
+          return DB.pegawai
+            .map(function (p) {
+              var ds = DB.dispo.filter(function (d) {
+                return d.pegawai_id === p.id && rids.indexOf(d.rapat_id) > -1;
+              });
+              var o = {
+                p: p,
+                total: ds.length,
+                ef: ds.filter(function (d) {
+                  return d.status === "EFEKTIF";
+                }).length,
+                tef: ds.filter(function (d) {
+                  return d.status === "TIDAK EFEKTIF";
+                }).length,
+                belum: ds.filter(function (d) {
+                  return !d.status;
+                }).length,
+              };
+              o.persen = o.total ? Math.round((o.ef * 100) / o.total) : 0;
+              return o;
+            })
+            .filter(function (o) {
+              return o.p.aktif || o.total;
+            })
+            .sort(function (a, b) {
+              return b.total - a.total || a.p.nama.localeCompare(b.p.nama);
+            });
+        }
+        function viewRekap(bulan) {
+          var rows = rekapData(bulan),
+            T = { total: 0, ef: 0, tef: 0, belum: 0 };
+          rows.forEach(function (r) {
+            T.total += r.total;
+            T.ef += r.ef;
+            T.tef += r.tef;
+            T.belum += r.belum;
+          });
+          T.persen = T.total ? Math.round((T.ef * 100) / T.total) : 0;
+          return (
+            '<div class="toolbar"><form class="filters" data-form="rekap"><input type="month" name="bulan" value="' +
+            bulan +
+            '"><button class="btn btn-light">Tampilkan</button><a class="btn btn-link" href="#/rekap?bulan=">Semua periode</a></form><button class="btn btn-light" data-act="export-rekap" data-bulan="' +
+            bulan +
+            '">' +
+            icon("download", 16) +
+            " Ekspor Excel</button></div>" +
+            '<p class="muted">Periode: <b>' +
+            bulanNama(bulan) +
+            '</b></p><div class="stats">' +
+            statCard("rapat", "c-blue", T.total, "Total disposisi") +
+            statCard("tugas", "c-green", T.ef, "Efektif") +
+            statCard("clock", "c-red", T.tef, "Tidak efektif") +
+            statCard("chart", "c-amber", T.persen + "%", "Tingkat efektif") +
+            "</div>" +
+            '<div class="card p0"><div class="table-wrap"><table class="table"><thead><tr><th>No</th><th>Pegawai</th><th>Unit</th><th class="c">Total Tugas</th><th class="c">Efektif</th><th class="c">Tidak Efektif</th><th class="c">Belum Lapor</th><th style="min-width:180px">% Efektif</th></tr></thead><tbody>' +
+            rows
+              .map(function (r, i) {
+                return (
+                  "<tr><td>" +
+                  (i + 1) +
+                  '</td><td><div class="strong">' +
+                  esc(r.p.nama) +
+                  '</div><div class="small muted">' +
+                  esc(r.p.jabatan || "") +
+                  (r.p.nip ? " · " + esc(r.p.nip) : "") +
+                  "</div></td><td>" +
+                  esc(r.p.unit || "-") +
+                  '</td><td class="c strong">' +
+                  r.total +
+                  "</td>" +
+                  '<td class="c"><span class="badge b-green">' +
+                  r.ef +
+                  '</span></td><td class="c"><span class="badge b-red">' +
+                  r.tef +
+                  '</span></td><td class="c"><span class="badge b-amber">' +
+                  r.belum +
+                  "</span></td>" +
+                  '<td><div class="bar"><div class="bar-fill ' +
+                  (r.persen < 50 ? "lo" : r.persen < 80 ? "mid" : "") +
+                  '" style="width:' +
+                  r.persen +
+                  '%"></div></div><span class="small">' +
+                  r.persen +
+                  "%</span></td></tr>"
+                );
+              })
+              .join("") +
+            '</tbody></table></div></div><p class="small muted">% Efektif = jumlah tugas berstatus EFEKTIF ÷ total tugas yang didisposisikan pada periode tersebut.</p>'
+          );
+        }
+
+        function viewPengaturan() {
+          var S = DB.settings;
+          return (
+            '<div class="grid-2"><form class="card form-card" data-form="pengaturan"><h3>Umum</h3><label class="field"><span>Nama aplikasi</span><input name="nama_aplikasi" value="' +
+            esc(S.nama_aplikasi) +
+            '" required></label>' +
+            '<label class="field"><span>Nama instansi / bagian</span><input name="nama_instansi" value="' +
+            esc(S.nama_instansi) +
+            '" required></label>' +
+            '<label class="field"><span>Pengingat rapat otomatis (menit sebelum rapat)</span><input type="number" min="0" name="pengingat_rapat_menit" value="' +
+            S.pengingat_rapat_menit +
+            '"><small class="muted">Pegawai yang didisposisi akan menerima notifikasi. Isi 0 untuk mematikan.</small></label>' +
+            '<div class="form-actions"><button class="btn btn-primary">Simpan Pengaturan</button></div></form>' +
+            '<div class="card"><h3>Informasi Sistem</h3><dl class="dl one"><div><dt>Jumlah pegawai</dt><dd>' +
+            DB.pegawai.length +
+            "</dd></div><div><dt>Akun pengguna</dt><dd>" +
+            DB.users.length +
+            "</dd></div><div><dt>Jadwal rapat</dt><dd>" +
+            DB.rapat.length +
+            "</dd></div><div><dt>Event &amp; reminder</dt><dd>" +
+            DB.events.length +
+            "</dd></div><div><dt>File bukti tersimpan</dt><dd>" +
+            DB.dispo.filter(function (d) {
+              return d.file;
+            }).length +
+            "</dd></div></dl>" +
+            '<h3 class="mt16">Data Demo</h3><p class="small muted">Kembalikan seluruh data ke kondisi contoh awal.</p><button class="btn btn-light" data-act="reset-demo">Reset data demo</button></div></div>'
+          );
+        }
+
+        function viewPassword() {
+          return (
+            '<form class="card form-card narrow" data-form="password"><label class="field"><span>Password lama</span><input type="password" name="lama" required></label><label class="field"><span>Password baru <em class="muted">(min. 6 karakter)</em></span><input type="password" name="baru" minlength="6" required></label>' +
+            '<label class="field"><span>Ulangi password baru</span><input type="password" name="ulang" minlength="6" required></label><div class="form-actions"><a href="#/dashboard" class="btn btn-light">Batal</a><button class="btn btn-primary">Simpan</button></div></form>'
+          );
+        }
+
+        /* ====================== after render (widgets) ====================== */
+        function afterRender() {
+          var dpList = document.getElementById("dpList"),
+            dpCount = document.getElementById("dpCount"),
+            dpSearch = document.getElementById("dpSearch");
+          function cnt() {
+            if (dpCount)
+              dpCount.textContent =
+                dpList.querySelectorAll("input:checked").length +
+                " pegawai dipilih";
+          }
+          if (dpList) {
+            dpList.addEventListener("change", cnt);
+            cnt();
+          }
+          if (dpSearch) {
+            dpSearch.addEventListener("input", function () {
+              var q = dpSearch.value.toLowerCase().trim();
+              dpList.querySelectorAll(".dp-item").forEach(function (el) {
+                el.style.display =
+                  !q || el.dataset.text.indexOf(q) > -1 ? "" : "none";
+              });
+            });
+            dpSearch.addEventListener("keydown", function (e) {
+              if (e.key === "Enter") e.preventDefault();
+            });
+          }
+          var form = document.getElementById("laporForm");
+          if (form) {
+            var d = byId(DB.dispo, +form.dataset.id),
+              input = document.getElementById("bukti"),
+              dz = document.getElementById("dropzone"),
+              dzText = document.getElementById("dzText"),
+              dzDefault = dzText.innerHTML;
+            var sync = function () {
+              var st = (form.querySelector("input[name=status]:checked") || {})
+                  .value,
+                tidak = st === "TIDAK EFEKTIF";
+              document.getElementById("fileActive").hidden = tidak;
+              document.getElementById("fileEmpty").hidden = !tidak;
+              document.getElementById("fileReq").hidden = tidak;
+              if (tidak) {
+                input.value = "";
+                pendingFile = null;
+                showName();
+              }
+            };
+            var showName = function () {
+              if (pendingFile) {
+                dz.classList.add("has-file");
+                dzText.innerHTML =
+                  "<b>" +
+                  esc(pendingFile.name) +
+                  "</b> (" +
+                  Math.round(pendingFile.size / 1024) +
+                  " KB)";
+              } else {
+                dz.classList.remove("has-file");
+                dzText.innerHTML = dzDefault;
+              }
+            };
+            var take = function (file) {
+              if (!file) return;
+              var ext = (file.name.split(".").pop() || "").toLowerCase();
+              if (
+                [
+                  "pdf",
+                  "png",
+                  "jpg",
+                  "jpeg",
+                  "doc",
+                  "docx",
+                  "xls",
+                  "xlsx",
+                  "ppt",
+                  "pptx",
+                ].indexOf(ext) < 0
+              ) {
+                laporErr("Format file tidak didukung.");
+                input.value = "";
+                return;
+              }
+              if (file.size > 10 * 1024 * 1024) {
+                laporErr("Ukuran file terlalu besar. Maksimal 10 MB.");
+                input.value = "";
+                return;
+              }
+              laporErr("");
+              pendingFile = { name: file.name, size: file.size, data: null };
+              if (file.size < 1.5 * 1024 * 1024) {
+                var fr = new FileReader();
+                fr.onload = function () {
+                  if (pendingFile) pendingFile.data = fr.result;
+                };
+                fr.readAsDataURL(file);
+              }
+              showName();
+            };
+            form.querySelectorAll("input[name=status]").forEach(function (r) {
+              r.addEventListener("change", sync);
+            });
+            input.addEventListener("change", function () {
+              take(input.files[0]);
+            });
+            ["dragover", "dragenter"].forEach(function (ev) {
+              dz.addEventListener(ev, function (e) {
+                e.preventDefault();
+                dz.classList.add("drag");
+              });
+            });
+            ["dragleave", "drop"].forEach(function (ev) {
+              dz.addEventListener(ev, function () {
+                dz.classList.remove("drag");
+              });
+            });
+            dz.addEventListener("drop", function (e) {
+              e.preventDefault();
+              take(e.dataTransfer.files[0]);
+            });
+            sync();
+          }
+        }
+        function laporErr(m) {
+          var el = document.getElementById("laporErr");
+          if (el)
+            el.innerHTML = m
+              ? '<div class="alert alert-error">' + esc(m) + "</div>"
+              : "";
+        }
+
+        /* ====================== form handlers ====================== */
+        var H = {
+          login: function (f, fd) {
+            var u = DB.users.filter(function (x) {
+              return (
+                x.username.toLowerCase() ===
+                String(fd.get("username")).trim().toLowerCase()
+              );
+            })[0];
+            if (u && u.password === fd.get("password")) {
+              if (!u.aktif) {
+                flash("Akun Anda dinonaktifkan. Hubungi admin.", "error");
+                return render();
+              }
+              u.last_login = nowStr();
+              DB.session = u.id;
+              save();
+              location.hash = "#/dashboard";
+              render();
+              setTimeout(checkReminders, 800);
+              return;
+            }
+            flash("Username atau password salah.", "error");
+            render();
+          },
+          rapat: function (f, fd) {
+            var id = +f.dataset.id || null,
+              labels = {
+                no_dispo_kabag: "No. Dispo Kabag",
+                no_surat_undangan: "No. Surat Undangan",
+                asal_undangan: "Asal Undangan",
+                perihal: "Perihal",
+                pimpinan_rapat: "Pimpinan Rapat",
+                tempat: "Tempat",
+              };
+            var data = {};
+            [
+              "no_dispo_kabag",
+              "no_surat_undangan",
+              "asal_undangan",
+              "perihal",
+              "pimpinan_rapat",
+              "tempat",
+              "keterangan",
+            ].forEach(function (k) {
+              data[k] = String(fd.get(k) || "").trim();
+            });
+            var errs = Object.keys(labels)
+              .filter(function (k) {
+                return !data[k];
+              })
+              .map(function (k) {
+                return labels[k] + " wajib diisi.";
+              });
+            if (!fd.get("tanggal") || !fd.get("jam"))
+              errs.push("Tanggal dan jam rapat wajib diisi.");
+            var pids = fd.getAll("disposisi").map(Number);
+            if (!pids.length)
+              errs.push(
+                "Disposisi wajib: pilih minimal satu pegawai yang ditugaskan.",
+              );
+            if (errs.length) {
+              showFormErr(f, errs);
+              return;
+            }
+            data.waktu = fd.get("tanggal") + "T" + fd.get("jam");
+            if (id) {
+              Object.assign(byId(DB.rapat, id), data);
+              DB.dispo = DB.dispo.filter(function (d) {
+                return d.rapat_id !== id || pids.indexOf(d.pegawai_id) > -1;
+              });
+            } else {
+              id = nextId(DB.rapat);
+              data.id = id;
+              DB.rapat.push(data);
+            }
+            pids.forEach(function (pid) {
+              if (
+                !DB.dispo.some(function (d) {
+                  return d.rapat_id === id && d.pegawai_id === pid;
+                })
+              )
+                DB.dispo.push({
+                  id: nextId(DB.dispo),
+                  rapat_id: id,
+                  pegawai_id: pid,
+                  status: null,
+                  file: null,
+                  catatan: "",
+                  dilaporkan_at: null,
+                });
+            });
+            save();
+            flash(
+              f.dataset.id
+                ? "Jadwal rapat berhasil diperbarui."
+                : "Jadwal rapat berhasil ditambahkan.",
+            );
+            go("#/rapat/" + id);
+          },
+          lapor: function (f, fd) {
+            var d = byId(DB.dispo, +f.dataset.id),
+              st = fd.get("status");
+            if (st !== "EFEKTIF" && st !== "TIDAK EFEKTIF")
+              return laporErr(
+                "Pilih status kinerja: EFEKTIF atau TIDAK EFEKTIF.",
+              );
+            if (st === "EFEKTIF") {
+              if (pendingFile) d.file = pendingFile;
+              else if (!d.file)
+                return laporErr(
+                  "Status EFEKTIF WAJIB melampirkan file bukti (PDF, PNG, JPG, dll).",
+                );
+            } else d.file = null;
+            d.status = st;
+            d.catatan = String(fd.get("catatan") || "").trim();
+            d.dilaporkan_at = nowStr();
+            pendingFile = null;
+            try {
+              save();
+            } catch (e) {
+              d.file && (d.file.data = null);
+              save();
+            }
+            flash("Laporan status kinerja berhasil disimpan.");
+            go(
+              isAdmin() && d.pegawai_id !== myPid()
+                ? "#/rapat/" + d.rapat_id
+                : "#/tugas",
+            );
+          },
+          event: function (f, fd) {
+            var id = +f.dataset.id || null,
+              judul = String(fd.get("judul") || "").trim(),
+              tgl0 = fd.get("tanggal");
+            if (!judul || !tgl0)
+              return showFormErr(f, ["Judul dan tanggal wajib diisi."]);
+            var mulai = tgl0 + "T" + (fd.get("jam") || "00:00"),
+              selesai = "";
+            if (fd.get("tanggal_selesai") || fd.get("jam_selesai")) {
+              selesai =
+                (fd.get("tanggal_selesai") || tgl0) +
+                "T" +
+                (fd.get("jam_selesai") || "23:59");
+              if (selesai < mulai)
+                return showFormErr(f, [
+                  "Waktu selesai tidak boleh sebelum waktu mulai.",
+                ]);
+            }
+            var data = {
+              judul: judul,
+              deskripsi: String(fd.get("deskripsi") || "").trim(),
+              jenis: fd.get("jenis") === "reminder" ? "reminder" : "event",
+              mulai: mulai,
+              selesai: selesai,
+              ingatkan_menit: +fd.get("ingatkan_menit") || 0,
+              untuk_pegawai_id: fd.get("untuk_pegawai_id")
+                ? +fd.get("untuk_pegawai_id")
+                : null,
+            };
+            if (id) Object.assign(byId(DB.events, id), data);
+            else {
+              data.id = nextId(DB.events);
+              DB.events.push(data);
+            }
+            save();
+            flash(
+              id
+                ? "Event/reminder diperbarui."
+                : "Event/reminder berhasil ditambahkan.",
+            );
+            go("#/event");
+          },
+          pegawai: function (f, fd) {
+            var id = +f.dataset.id || null,
+              data = {};
+            ["nip", "nama", "jabatan", "unit", "no_hp", "email"].forEach(
+              function (k) {
+                data[k] = String(fd.get(k) || "").trim();
+              },
+            );
+            data.aktif = !!fd.get("aktif");
+            if (!data.nama)
+              return showFormErr(f, ["Nama pegawai wajib diisi."]);
+            if (id) Object.assign(byId(DB.pegawai, id), data);
+            else {
+              id = data.id = nextId(DB.pegawai);
+              DB.pegawai.push(data);
+            }
+            save();
+            flash(
+              f.dataset.id
+                ? "Data pegawai diperbarui."
+                : "Data pegawai ditambahkan.",
+            );
+            go(
+              !f.dataset.id && fd.get("buat_akun")
+                ? "#/pengguna/baru?pegawai_id=" + id
+                : "#/pegawai",
+            );
+          },
+          pengguna: function (f, fd) {
+            var id = +f.dataset.id || null,
+              username = String(fd.get("username") || "")
+                .trim()
+                .toLowerCase(),
+              pw = String(fd.get("password") || ""),
+              role = fd.get("role") === "admin" ? "admin" : "user",
+              pid = fd.get("pegawai_id") ? +fd.get("pegawai_id") : null,
+              aktif = !!fd.get("aktif"),
+              errs = [];
+            if (!/^[a-z0-9._]+$/.test(username))
+              errs.push(
+                "Username wajib diisi (huruf/angka, boleh titik atau garis bawah).",
+              );
+            else if (
+              DB.users.some(function (u) {
+                return u.username === username && u.id !== id;
+              })
+            )
+              errs.push("Username sudah dipakai.");
+            if ((!id || pw) && pw.length < 6)
+              errs.push("Password minimal 6 karakter.");
+            if (role === "user" && !pid)
+              errs.push(
+                "Akun User wajib dihubungkan ke data pegawai agar bisa menerima tugas.",
+              );
+            if (id && id === me().id && (role !== "admin" || !aktif))
+              errs.push(
+                "Anda tidak dapat menurunkan peran / menonaktifkan akun Anda sendiri.",
+              );
+            if (errs.length) return showFormErr(f, errs);
+            if (id) {
+              var u = byId(DB.users, id);
+              Object.assign(u, {
+                username: username,
+                role: role,
+                pegawai_id: pid,
+                aktif: aktif,
+              });
+              if (pw) u.password = pw;
+            } else
+              DB.users.push({
+                id: nextId(DB.users),
+                username: username,
+                password: pw,
+                role: role,
+                pegawai_id: pid,
+                aktif: aktif,
+                last_login: null,
+              });
+            save();
+            flash(id ? "Akun pengguna diperbarui." : "Akun pengguna dibuat.");
+            go("#/pengguna");
+          },
+          pengaturan: function (f, fd) {
+            DB.settings.nama_aplikasi =
+              String(fd.get("nama_aplikasi")).trim() ||
+              DB.settings.nama_aplikasi;
+            DB.settings.nama_instansi =
+              String(fd.get("nama_instansi")).trim() ||
+              DB.settings.nama_instansi;
+            DB.settings.pengingat_rapat_menit = Math.max(
+              0,
+              +fd.get("pengingat_rapat_menit") || 0,
+            );
+            save();
+            flash("Pengaturan disimpan.");
+            render();
+          },
+          password: function (f, fd) {
+            var u = me();
+            if (fd.get("lama") !== u.password)
+              return showFormErr(f, ["Password lama salah."]);
+            if (String(fd.get("baru")).length < 6)
+              return showFormErr(f, ["Password baru minimal 6 karakter."]);
+            if (fd.get("baru") !== fd.get("ulang"))
+              return showFormErr(f, ["Konfirmasi password tidak sama."]);
+            u.password = fd.get("baru");
+            save();
+            flash("Password berhasil diubah.");
+            go("#/dashboard");
+          },
+          "cari-pegawai": function (f, fd) {
+            go("#/pegawai?q=" + encodeURIComponent(fd.get("q") || ""));
+          },
+          rekap: function (f, fd) {
+            go("#/rekap?bulan=" + (fd.get("bulan") || ""));
+          },
+        };
+        function showFormErr(f, errs) {
+          var box = f.querySelector(".form-errs");
+          if (!box) {
+            box = document.createElement("div");
+            box.className = "form-errs";
+            f.insertBefore(box, f.firstChild);
+          }
+          box.innerHTML = errs
+            .map(function (e) {
+              return '<div class="alert alert-error">' + esc(e) + "</div>";
+            })
+            .join("");
+          window.scrollTo(0, 0);
+        }
+
+        /* ====================== export (CSV utk Excel) ====================== */
+        function download(name, rows) {
+          var csv =
+            "\ufeff" +
+            rows
+              .map(function (r) {
+                return r
+                  .map(function (c) {
+                    c = String(c == null ? "" : c);
+                    return /[";\n]/.test(c)
+                      ? '"' + c.replace(/"/g, '""') + '"'
+                      : c;
+                  })
+                  .join(";");
+              })
+              .join("\r\n");
+          try {
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(
+              new Blob([csv], { type: "text/csv;charset=utf-8" }),
+            );
+            a.download = name;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            toast(
+              '<b>File ekspor dibuat</b><div class="small">' +
+                esc(name) +
+                " — jika unduhan tidak muncul (mode pratinjau), buka file ini langsung di browser.</div>",
+              6000,
+            );
+          } catch (e) {
+            toast("<b>Ekspor tidak tersedia di mode pratinjau</b>");
+          }
+        }
+        function exportRapat() {
+          var rows = [
+            [
+              "NO",
+              "NO DISPO KABAG",
+              "NO SURAT UNDANGAN",
+              "ASAL UNDANGAN",
+              "PERIHAL (AGENDA RAPAT)",
+              "PIMPINAN RAPAT",
+              "TEMPAT",
+              "TANGGAL",
+              "JAM",
+              "DISPOSISI",
+              "STATUS KINERJA",
+              "FILE BUKTI",
+              "CATATAN",
+              "KETERANGAN",
+            ],
+          ];
+          filteredRapat()
+            .reverse()
+            .forEach(function (r, i) {
+              var ds = dispoOf(r.id);
+              if (!ds.length) ds = [null];
+              ds.forEach(function (d, j) {
+                rows.push([
+                  j ? "" : i + 1,
+                  r.no_dispo_kabag,
+                  r.no_surat_undangan,
+                  r.asal_undangan,
+                  r.perihal,
+                  r.pimpinan_rapat,
+                  r.tempat,
+                  tgl(r.waktu),
+                  jam(r.waktu),
+                  d ? pegNama(d.pegawai_id) : "-",
+                  d ? d.status || "BELUM LAPOR" : "-",
+                  d && d.file ? d.file.name : "-",
+                  d ? d.catatan : "",
+                  r.keterangan,
+                ]);
+              });
+            });
+          download("jadwal-rapat-" + (F.bulan || "semua") + ".csv", rows);
+        }
+        function exportRekap(bulan) {
+          var rows = [
+            [
+              "NO",
+              "NIP",
+              "NAMA",
+              "JABATAN",
+              "UNIT",
+              "TOTAL TUGAS",
+              "EFEKTIF",
+              "TIDAK EFEKTIF",
+              "BELUM LAPOR",
+              "% EFEKTIF",
+            ],
+          ];
+          rekapData(bulan).forEach(function (r, i) {
+            rows.push([
+              i + 1,
+              "'" + (r.p.nip || ""),
+              r.p.nama,
+              r.p.jabatan,
+              r.p.unit,
+              r.total,
+              r.ef,
+              r.tef,
+              r.belum,
+              r.persen + "%",
+            ]);
+          });
+          download("rekap-kinerja-" + (bulan || "semua") + ".csv", rows);
+        }
+
+        /* ====================== reminders ====================== */
+        var shownKeys = {};
+        function checkReminders() {
+          if (!me()) return;
+          var now = new Date(),
+            nowS = toStr(now),
+            out = [];
+          visibleEvents().forEach(function (e) {
+            if (!e.ingatkan_menit) return;
+            var st = parse(e.mulai);
+            if (st - e.ingatkan_menit * 60000 <= now && now <= st)
+              out.push({
+                key: "e" + e.id + e.mulai,
+                jenis: e.jenis === "reminder" ? "Reminder" : "Event",
+                judul: e.judul,
+                waktu: tgljam(e.mulai),
+                sisa: relatif(e.mulai),
+                url: "#/event",
+              });
+          });
+          var m = +DB.settings.pengingat_rapat_menit,
+            pid = myPid();
+          if (pid && m > 0)
+            DB.dispo.forEach(function (d) {
+              if (d.pegawai_id !== pid) return;
+              var r = byId(DB.rapat, d.rapat_id),
+                st = parse(r.waktu);
+              if (r.waktu >= nowS && st - m * 60000 <= now)
+                out.push({
+                  key: "r" + r.id + r.waktu,
+                  jenis: "Rapat",
+                  judul: r.perihal,
+                  waktu: tgljam(r.waktu) + " • " + r.tempat,
+                  sisa: relatif(r.waktu),
+                  url: "#/rapat/" + r.id,
+                });
+            });
+          out.forEach(function (it) {
+            var k = DB.session + it.key;
+            if (shownKeys[k]) return;
+            shownKeys[k] = 1;
+            toast(
+              "<b>" +
+                esc(it.jenis) +
+                ": " +
+                esc(it.judul) +
+                '</b><div class="small">' +
+                esc(it.waktu) +
+                " · " +
+                esc(it.sisa) +
+                '</div><a href="' +
+                it.url +
+                '">Lihat detail</a>',
+            );
+          });
+        }
+        setInterval(checkReminders, 60000);
+
+        /* ====================== global events ====================== */
+        document.addEventListener("submit", function (e) {
+          var f = e.target;
+          if (!f.dataset.form || !H[f.dataset.form]) return;
+          e.preventDefault();
+          H[f.dataset.form](f, new FormData(f));
+        });
+        document.addEventListener("input", function (e) {
+          var k = e.target.dataset && e.target.dataset.filter;
+          if (!k) return;
+          F[k] = e.target.value;
+          var body = document.getElementById("rapatBody");
+          if (body) body.innerHTML = rapatRows();
+        });
+        document.addEventListener("change", function (e) {
+          var k = e.target.dataset && e.target.dataset.filter;
+          if (!k || e.target.type === "search") return;
+          F[k] = e.target.value;
+          var body = document.getElementById("rapatBody");
+          if (body) body.innerHTML = rapatRows();
+        });
+        document.addEventListener("click", function (e) {
+          var el = e.target.closest("[data-act]");
+          if (!el) {
+            if (e.target.id === "modal") closeModal();
+            return;
+          }
+          var act = el.dataset.act,
+            id = +el.dataset.id;
+          switch (act) {
+            case "quick":
+              var f = el.closest("form");
+              f.querySelector("[name=username]").value = el.dataset.u;
+              f.querySelector("[name=password]").value = el.dataset.p;
+              H.login(f, new FormData(f));
+              break;
+            case "logout":
+              DB.session = null;
+              save();
+              flash("Anda telah keluar.", "info");
+              location.hash = "";
+              render();
+              break;
+            case "nav-toggle":
+              document.body.classList.toggle("nav-open");
+              break;
+            case "nav-close":
+              document.body.classList.remove("nav-open");
+              break;
+            case "modal-close":
+              closeModal();
+              break;
+            case "confirm-yes":
+              closeModal();
+              if (pendingConfirm) pendingConfirm();
+              pendingConfirm = null;
+              break;
+            case "reset-filter":
+              F = { q: "", bulan: "", status: "" };
+              render();
+              break;
+            case "export-csv":
+              exportRapat();
+              break;
+            case "export-rekap":
+              exportRekap(el.dataset.bulan);
+              break;
+            case "del-rapat":
+              confirmBox(el.dataset.msg, function () {
+                DB.rapat = DB.rapat.filter(function (r) {
+                  return r.id !== id;
+                });
+                DB.dispo = DB.dispo.filter(function (d) {
+                  return d.rapat_id !== id;
+                });
+                save();
+                flash("Jadwal rapat dihapus.");
+                go("#/rapat");
+              });
+              break;
+            case "del-event":
+              confirmBox(el.dataset.msg, function () {
+                DB.events = DB.events.filter(function (x) {
+                  return x.id !== id;
+                });
+                save();
+                flash("Event/reminder dihapus.");
+                render();
+              });
+              break;
+            case "del-pegawai":
+              confirmBox(el.dataset.msg, function () {
+                var n = DB.dispo.filter(function (d) {
+                  return d.pegawai_id === id;
+                }).length;
+                if (n)
+                  flash(
+                    "Pegawai memiliki " +
+                      n +
+                      " riwayat tugas sehingga tidak dapat dihapus. Nonaktifkan saja agar riwayat kinerja tetap tersimpan.",
+                    "error",
+                  );
+                else {
+                  DB.pegawai = DB.pegawai.filter(function (p) {
+                    return p.id !== id;
+                  });
+                  DB.users.forEach(function (u) {
+                    if (u.pegawai_id === id) u.pegawai_id = null;
+                  });
+                  DB.events = DB.events.filter(function (x) {
+                    return x.untuk_pegawai_id !== id;
+                  });
+                  save();
+                  flash("Data pegawai dihapus.");
+                }
+                render();
+              });
+              break;
+            case "del-user":
+              confirmBox(el.dataset.msg, function () {
+                DB.users = DB.users.filter(function (u) {
+                  return u.id !== id;
+                });
+                save();
+                flash("Akun pengguna dihapus.");
+                render();
+              });
+              break;
+            case "reset-demo":
+              pendingConfirm = function () {
+                var s = DB.session;
+                seed();
+                DB.session = byId(DB.users, s) ? s : 1;
+                save();
+                flash("Data demo dikembalikan ke kondisi awal.");
+                render();
+              };
+              modal(
+                '<h3>Reset data demo?</h3><p>Semua perubahan akan hilang.</p><div class="form-actions"><button class="btn btn-light" data-act="modal-close">Batal</button><button class="btn btn-danger" data-act="confirm-yes">Reset</button></div>',
+              );
+              break;
+            case "view-file":
+              var d = byId(DB.dispo, id);
+              if (!d || !d.file) return;
+              var isImg = d.file.data && /^data:image\//.test(d.file.data);
+              modal(
+                "<h3>" +
+                  icon("file", 18) +
+                  " " +
+                  esc(d.file.name) +
+                  "</h3>" +
+                  (isImg
+                    ? '<img src="' +
+                      d.file.data +
+                      '" style="max-width:100%;border-radius:8px;margin-top:10px">'
+                    : '<p class="muted">Ukuran: ' +
+                      Math.round(d.file.size / 1024) +
+                      " KB.<br>Pratinjau " +
+                      (d.file.data
+                        ? "hanya tersedia untuk gambar pada versi demo."
+                        : "tidak tersedia (data contoh).") +
+                      " Pada versi server, file dapat dibuka &amp; diunduh langsung.</p>") +
+                  '<div class="form-actions"><button class="btn btn-primary" data-act="modal-close">Tutup</button></div>',
+              );
+              break;
+          }
+        });
+        window.addEventListener("hashchange", render);
+        render();
+        setTimeout(checkReminders, 1000);
+      })();
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b =
+            a.contentDocument || (a.contentWindow && a.contentWindow.document);
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'a4af9e77bec7ce2b',t:'MTc5MjA3NTY0Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+    <script
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920"
+      integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA=="
+      data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}'
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

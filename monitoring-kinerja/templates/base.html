@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{% endblock %} · {{ settings.nama_aplikasi }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% set ep = request.endpoint or '' %}
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">{% for w in settings.nama_aplikasi.split()[:2] %}{{ w[0]|upper }}{% endfor %}</div>
+      <div><div class="brand-title">{{ settings.nama_aplikasi }}</div><div class="brand-sub">{{ settings.nama_instansi }}</div></div>
+    </div>
+    <nav class="nav">
+      <a href="{{ url_for('dashboard') }}" class="{{ 'active' if ep=='dashboard' }}">{{ icon('home') }} Dashboard</a>
+      {% if is_admin %}
+      <div class="nav-label">Kegiatan</div>
+      <a href="{{ url_for('rapat_list') }}" class="{{ 'active' if ep.startswith('rapat') }}">{{ icon('rapat') }} Jadwal Rapat</a>
+      {% endif %}
+      {% if current_user.pegawai_id %}
+      <a href="{{ url_for('tugas_saya') }}" class="{{ 'active' if ep in ('tugas_saya','lapor') or (ep=='rapat_detail' and not is_admin) }}">{{ icon('tugas') }} Tugas Saya {% if badge_tugas %}<span class="nav-badge">{{ badge_tugas }}</span>{% endif %}</a>
+      {% endif %}
+      <a href="{{ url_for('kalender') }}" class="{{ 'active' if ep=='kalender' }}">{{ icon('kalender') }} Kalender</a>
+      <a href="{{ url_for('event_list') }}" class="{{ 'active' if ep.startswith('event') }}">{{ icon('bell') }} {{ 'Event & Reminder' if is_admin else 'Pengingat & Event' }}</a>
+      {% if is_admin %}
+      <div class="nav-label">Pengaturan Sistem</div>
+      <a href="{{ url_for('pegawai_list') }}" class="{{ 'active' if ep.startswith('pegawai') }}">{{ icon('pegawai') }} Data Pegawai</a>
+      <a href="{{ url_for('pengguna_list') }}" class="{{ 'active' if ep.startswith('pengguna') }}">{{ icon('kunci') }} Akses Pengguna</a>
+      <a href="{{ url_for('rekap') }}" class="{{ 'active' if ep.startswith('rekap') }}">{{ icon('chart') }} Rekap Kinerja</a>
+      <a href="{{ url_for('pengaturan') }}" class="{{ 'active' if ep=='pengaturan' }}">{{ icon('gear') }} Pengaturan</a>
+      {% endif %}
+    </nav>
+    <div class="sidebar-foot">
+      <button type="button" class="btn btn-sm btn-outline-light w100" id="btnNotif">{{ icon('bell',15) }} Aktifkan notifikasi</button>
+    </div>
+  </aside>
+  <div class="backdrop" id="backdrop"></div>
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu">{{ icon('menu') }}</button>
+      <h1 class="page-title">{% block heading %}{% endblock %}</h1>
+      <div class="user-box">
+        <div class="avatar">{{ (current_user.pegawai_nama or current_user.username)[:1]|upper }}</div>
+        <div class="user-meta">
+          <div class="user-name">{{ current_user.pegawai_nama or current_user.username }}</div>
+          <div class="user-role">{{ 'Administrator' if is_admin else 'Pengguna' }} · @{{ current_user.username }}</div>
+        </div>
+        <a class="icon-btn" href="{{ url_for('ganti_password') }}" title="Ganti password">{{ icon('kunci') }}</a>
+        <form method="post" action="{{ url_for('logout') }}" class="inline">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <button class="icon-btn" title="Keluar">{{ icon('logout') }}</button>
+        </form>
+      </div>
+    </header>
+    <div class="content">
+      {% with msgs = get_flashed_messages(with_categories=true) %}
+        {% for cat, m in msgs %}<div class="alert alert-{{ cat }}">{{ m }}</div>{% endfor %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+<div id="toasts" class="toasts"></div>
+<script>window.APP = { remindersUrl: "{{ url_for('api_reminders') }}", uid: "{{ current_user.id }}" };</script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

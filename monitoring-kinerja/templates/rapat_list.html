@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, delete_btn %}
+{% block title %}Jadwal Rapat{% endblock %}
+{% block heading %}Jadwal Rapat{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <form class="filters" method="get">
+    <input type="search" name="q" value="{{ f.q }}" placeholder="Cari perihal, no. surat, asal, tempat, pegawai…">
+    <input type="month" name="bulan" value="{{ f.bulan }}" title="Filter bulan">
+    <select name="status">
+      <option value="">Semua status</option>
+      <option value="belum" {{ 'selected' if f.status=='belum' }}>Ada yang belum lapor</option>
+      <option value="lengkap" {{ 'selected' if f.status=='lengkap' }}>Laporan lengkap</option>
+      <option value="efektif" {{ 'selected' if f.status=='efektif' }}>Ada yang Efektif</option>
+      <option value="tidak" {{ 'selected' if f.status=='tidak' }}>Ada yang Tidak Efektif</option>
+    </select>
+    <button class="btn btn-light">Filter</button>
+    {% if f.q or f.bulan or f.status %}<a href="{{ url_for('rapat_list') }}" class="btn btn-link">Reset</a>{% endif %}
+  </form>
+  <div class="actions">
+    <a href="{{ url_for('rapat_export', **f) }}" class="btn btn-light">{{ icon('download',16) }} Ekspor Excel</a>
+    <a href="{{ url_for('rapat_baru') }}" class="btn btn-primary">{{ icon('plus',16) }} Tambah Rapat</a>
+  </div>
+</div>
+
+<div class="card p0">
+  <div class="table-wrap">
+  <table class="table">
+    <thead><tr>
+      <th>No</th><th>No. Dispo Kabag</th><th>No. Surat Undangan</th><th>Asal Undangan</th><th>Perihal (Agenda Rapat)</th>
+      <th>Pimpinan Rapat</th><th>Tempat</th><th>Waktu Rapat</th><th>Disposisi &amp; Status Kinerja</th><th>Keterangan</th><th></th>
+    </tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr class="{{ 'row-past' if r.waktu < now }}">
+        <td>{{ loop.index }}</td>
+        <td class="nowrap">{{ r.no_dispo_kabag }}</td>
+        <td class="nowrap">{{ r.no_surat_undangan }}</td>
+        <td>{{ r.asal_undangan }}</td>
+        <td class="strong"><a href="{{ url_for('rapat_detail', rid=r.id) }}">{{ r.perihal }}</a></td>
+        <td>{{ r.pimpinan_rapat }}</td>
+        <td>{{ r.tempat }}</td>
+        <td class="nowrap">{{ r.waktu|tgl(false) }}<br><span class="muted">{{ r.waktu|jam }} WIB</span></td>
+        <td>
+          {% for d in r.dispo %}<div class="dispo-line"><span>{{ d.nama }}</span>{{ status_badge(d.status) }}</div>{% endfor %}
+        </td>
+        <td class="small">{{ r.keterangan or '-' }}</td>
+        <td class="nowrap actions-cell">
+          <a href="{{ url_for('rapat_detail', rid=r.id) }}" class="btn btn-sm btn-ghost" title="Detail">{{ icon('eye',15) }}</a>
+          <a href="{{ url_for('rapat_edit', rid=r.id) }}" class="btn btn-sm btn-ghost" title="Edit">{{ icon('edit',15) }}</a>
+          {{ delete_btn(url_for('rapat_hapus', rid=r.id), msg='Hapus jadwal rapat ini beserta seluruh laporan & file buktinya?') }}
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="11" class="empty">Belum ada jadwal rapat.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+<p class="muted small">Menampilkan {{ rows|length }} jadwal rapat. Baris abu-abu = rapat yang sudah lewat.</p>
+{% endblock %}

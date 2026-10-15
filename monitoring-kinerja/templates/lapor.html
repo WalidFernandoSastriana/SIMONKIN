@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Laporan Kinerja{% endblock %}
+{% block heading %}Laporan Status Kinerja{% endblock %}
+{% block content %}
+<a href="{{ request.referrer or url_for('tugas_saya') }}" class="btn btn-link">{{ icon('chev-l',16) }} Kembali</a>
+<div class="grid-2 lapor-grid">
+  <div class="card">
+    <div class="muted small">Rapat yang ditugaskan</div>
+    <h3 class="mt4">{{ r.perihal }}</h3>
+    <dl class="dl one">
+      <div><dt>Pegawai</dt><dd>{{ d.nama }} <span class="muted">({{ d.jabatan or '-' }})</span></dd></div>
+      <div><dt>Waktu</dt><dd>{{ r.waktu|tgl }}, {{ r.waktu|jam }} WIB</dd></div>
+      <div><dt>Tempat</dt><dd>{{ r.tempat }}</dd></div>
+      <div><dt>Pimpinan Rapat</dt><dd>{{ r.pimpinan_rapat }}</dd></div>
+      <div><dt>Asal Undangan</dt><dd>{{ r.asal_undangan }}</dd></div>
+      <div><dt>No. Dispo / Surat</dt><dd>{{ r.no_dispo_kabag }} / {{ r.no_surat_undangan }}</dd></div>
+      {% if r.keterangan %}<div><dt>Keterangan</dt><dd>{{ r.keterangan }}</dd></div>{% endif %}
+    </dl>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="card form-card" id="laporForm" data-has-file="{{ '1' if d.file_path else '0' }}">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="field"><span>Status Kinerja <b class="req">*</b></span>
+      <div class="status-choice">
+        <label class="sc sc-ef"><input type="radio" name="status" value="EFEKTIF" {{ 'checked' if d.status=='EFEKTIF' }} required>
+          <div><b>EFEKTIF</b><small>Wajib melampirkan file bukti</small></div></label>
+        <label class="sc sc-tef"><input type="radio" name="status" value="TIDAK EFEKTIF" {{ 'checked' if d.status=='TIDAK EFEKTIF' }}>
+          <div><b>TIDAK EFEKTIF</b><small>File otomatis kosong</small></div></label>
+      </div>
+    </div>
+
+    <div class="field" id="fileField">
+      <span>File Bukti <b class="req" id="fileReq">*</b></span>
+      <div id="fileActive">
+        {% if d.file_path %}
+        <div class="current-file">{{ icon('file',15) }} File saat ini: <a href="{{ url_for('berkas', did=d.id) }}" target="_blank">{{ d.file_name }}</a>
+          <span class="small muted">(unggah file baru untuk mengganti)</span></div>
+        {% endif %}
+        <label class="dropzone" id="dropzone">
+          <input type="file" name="bukti" id="bukti" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+          <div>{{ icon('download',22) }}</div>
+          <div id="dzText"><b>Klik untuk memilih file</b> atau seret ke sini</div>
+          <div class="small muted">Format: {{ allowed_ext }} · maks {{ max_mb }} MB</div>
+        </label>
+      </div>
+      <div id="fileEmpty" class="file-empty" hidden>— File kosong (otomatis karena status TIDAK EFEKTIF) —</div>
+    </div>
+
+    <label class="field"><span>Catatan</span>
+      <textarea name="catatan" rows="4" placeholder="Tuliskan catatan / hasil rapat / alasan tidak efektif…">{{ d.catatan or '' }}</textarea></label>
+
+    <div class="form-actions">
+      <a href="{{ url_for('tugas_saya') }}" class="btn btn-light">Batal</a>
+      <button class="btn btn-primary">{{ icon('send',15) }} Simpan Laporan</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import delete_btn %}
+{% block title %}Data Pegawai{% endblock %}
+{% block heading %}Data Pegawai{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <form class="filters" method="get">
+    <input type="search" name="q" value="{{ q }}" placeholder="Cari nama, NIP, jabatan, unit…">
+    <button class="btn btn-light">Cari</button>
+  </form>
+  <a href="{{ url_for('pegawai_baru') }}" class="btn btn-primary">{{ icon('plus',16) }} Tambah Pegawai</a>
+</div>
+<div class="card p0"><div class="table-wrap">
+<table class="table">
+  <thead><tr><th>No</th><th>Nama</th><th>NIP</th><th>Jabatan</th><th>Unit / Bidang</th><th>Kontak</th><th>Akun Login</th><th>Tugas</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for p in rows %}
+  <tr class="{{ 'row-past' if not p.aktif }}">
+    <td>{{ loop.index }}</td>
+    <td class="strong">{{ p.nama }}</td>
+    <td class="nowrap">{{ p.nip or '-' }}</td>
+    <td>{{ p.jabatan or '-' }}</td>
+    <td>{{ p.unit or '-' }}</td>
+    <td class="small">{{ p.no_hp or '' }}{% if p.email %}<br>{{ p.email }}{% endif %}</td>
+    <td>{% if p.username %}<a href="{{ url_for('pengguna_edit', uid=p.user_id) }}" class="chip">@{{ p.username }}</a>
+        {% else %}<a href="{{ url_for('pengguna_baru', pegawai_id=p.id) }}" class="btn btn-sm btn-light">{{ icon('plus',13) }} Buat akun</a>{% endif %}</td>
+    <td>{{ p.jml_tugas }}</td>
+    <td>{% if p.aktif %}<span class="badge b-green">Aktif</span>{% else %}<span class="badge b-gray">Nonaktif</span>{% endif %}</td>
+    <td class="nowrap">
+      <a href="{{ url_for('pegawai_edit', pid=p.id) }}" class="btn btn-sm btn-ghost">{{ icon('edit',15) }}</a>
+      {{ delete_btn(url_for('pegawai_hapus', pid=p.id), msg='Hapus data pegawai ini?') }}
+    </td>
+  </tr>
+  {% else %}<tr><td colspan="10" class="empty">Belum ada data pegawai.</td></tr>{% endfor %}
+  </tbody>
+</table></div></div>
+{% endblock %}

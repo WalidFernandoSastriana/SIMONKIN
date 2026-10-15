@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, file_cell %}
+{% block title %}Tugas Saya{% endblock %}
+{% block heading %}Tugas Saya{% endblock %}
+{% block content %}
+{% if not current_user.pegawai_id %}
+<div class="alert alert-error">Akun Anda belum terhubung dengan data pegawai. Hubungi admin.</div>
+{% endif %}
+<div class="tabs">
+  {% for key, label in [('semua','Semua'),('belum','Belum Lapor'),('efektif','Efektif'),('tidak','Tidak Efektif')] %}
+  <a href="{{ url_for('tugas_saya', tab=key) }}" class="tab {{ 'active' if tab==key }}">{{ label }}</a>
+  {% endfor %}
+</div>
+<div class="task-list">
+{% for r in rows %}
+  <div class="card task {{ 'task-' ~ ('belum' if not r.status else ('ef' if r.status=='EFEKTIF' else 'tef')) }}">
+    <div class="task-main">
+      <div class="task-top">
+        {{ status_badge(r.status) }}
+        <span class="chip">{{ r.waktu|relatif }}</span>
+      </div>
+      <h3><a href="{{ url_for('rapat_detail', rid=r.id) }}">{{ r.perihal }}</a></h3>
+      <div class="li-meta">{{ icon('clock',13) }} {{ r.waktu|tgl }}, {{ r.waktu|jam }} WIB &nbsp;·&nbsp; {{ icon('pin',13) }} {{ r.tempat }}</div>
+      <div class="task-info">
+        <span><b>Asal:</b> {{ r.asal_undangan }}</span>
+        <span><b>Pimpinan:</b> {{ r.pimpinan_rapat }}</span>
+        <span><b>No. Dispo:</b> {{ r.no_dispo_kabag }}</span>
+        <span><b>No. Surat:</b> {{ r.no_surat_undangan }}</span>
+      </div>
+      {% if r.keterangan %}<div class="small muted">Keterangan: {{ r.keterangan }}</div>{% endif %}
+      {% if r.status %}
+      <div class="task-report">
+        <div><b>File:</b> {{ file_cell({'id': r.dispo_id, 'status': r.status, 'file_path': r.file_name, 'file_name': r.file_name}) }}</div>
+        <div><b>Catatan:</b> {{ r.catatan or '-' }}</div>
+        <div class="small muted">Dilaporkan {{ r.dilaporkan_at|tgljam }}</div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="task-act">
+      <a href="{{ url_for('lapor', did=r.dispo_id) }}" class="btn {{ 'btn-primary' if not r.status else 'btn-light' }}">{{ icon('send',15) }} {{ 'Laporkan Kinerja' if not r.status else 'Ubah Laporan' }}</a>
+    </div>
+  </div>
+{% else %}
+  <div class="card empty-state"><p>Tidak ada tugas pada kategori ini.</p></div>
+{% endfor %}
+</div>
+{% endblock %}
