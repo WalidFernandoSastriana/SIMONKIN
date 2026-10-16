@@ -117,12 +117,12 @@
                 current_user.username }}
               </div>
             </div>
-            <a
+            <!-- <a
               class="icon-btn"
               href="{{ url_for('ganti_password') }}"
               title="Ganti password"
               >{{ icon('kunci') }}</a
-            >
+            > -->
             <form method="post" action="{{ url_for('logout') }}" class="inline">
               <input type="hidden" name="_csrf" value="{{ csrf_token() }}" />
               <button class="icon-btn" title="Keluar">
